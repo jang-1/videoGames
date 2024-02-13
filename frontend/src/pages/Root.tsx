@@ -2,6 +2,7 @@ import {Outlet} from "react-router-dom"
 import styled from "styled-components"
 // import Bg from '../assets/bg2.jpg'
 import Header from "../layout/Header"
+import Footer from "../layout/Footer"
 
 const Container = styled.div`
     height: 100vh;
@@ -18,6 +19,7 @@ const RootLayout = () => {
         <Container>
             <Header/>
             <Outlet />
+            <Footer/>
         </Container>
     )
 }

@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 import Bg from '../assets/bg.jpeg'
-import A from '../components/Home/A'
-import B from '../components/Home/B'
+import Updates from '../components/Home/Updates'
+import NewGames from '../components/Home/NewGames'
 
 
 const Home = () => {
   return (
     <div>
-        <A/>
-        <B/>
+        <Updates/>
+        <NewGames/>
     </div>
   )
 }

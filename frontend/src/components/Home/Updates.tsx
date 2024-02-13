@@ -29,7 +29,7 @@ const CardWrapper = styled.div`
 
 
 
-const A = () => {
+const Updates = () => {
 
   const listOfNews = [
     {title: "one", teaser:"loremloremloremloremloremloremloremloremlorem"},
@@ -42,7 +42,7 @@ const A = () => {
   return (
     <Section>
       <Typography gutterBottom variant="h3" component="h1" color="white">
-          Co nowego?
+          Aktualności
       </Typography>
       <Wrapper>
         {listOfNews.map(({title, teaser}) => (
@@ -55,4 +55,4 @@ const A = () => {
   )
 }
 
-export default A
+export default Updates
