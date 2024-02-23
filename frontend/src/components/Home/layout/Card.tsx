@@ -2,7 +2,6 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CsGo from "../../../assets/csgo.jpg"
 import ButtonComponent from '../../../layout/StyledButton';
@@ -30,7 +29,7 @@ interface ICardProps {
         </Typography>
       </CardContent>
       <CardActions sx={{backgroundColor:"#740343"}}>
-        <ButtonComponent title="Czytaj więcej" color="#da4ea2"/>
+        <ButtonComponent title="Czytaj więcej"/>
       </CardActions>
     </Card>
   );

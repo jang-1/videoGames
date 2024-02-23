@@ -9,8 +9,6 @@ import { Suspense } from 'react';
 import { useForm } from "react-hook-form"
 import StyledField from '../layout/StyledField';
 import StyledButton from '../layout/StyledButton';
-import {  Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 
 interface FormData  {
@@ -99,18 +97,6 @@ const Form = styled.form`
   padding: 40px;
   `;
 
-const StyledBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap:10px;
-`;
-
-const StyledLink = styled(Link)`
-  color: #870252;
-  :hover{
-    color: blue;
-  }
-`;
 
 
 
@@ -130,7 +116,7 @@ const StyledLink = styled(Link)`
         <Navbar />
         <Container>
             <Left>
-            <Canvas>
+                <Canvas>
                     <Suspense fallback={null}>
                     <OrbitControls enableZoom={false} />
                     <ambientLight intensity={1} />
@@ -155,7 +141,6 @@ const StyledLink = styled(Link)`
                     <StyledField {...register("confirm")} type="password" label="Confirm password" variant="standard" />
                     <StyledButton
                       title="Zarejestruj się"
-                      color="#da4ea2"
                       type="submit"
                     />
                 </Form>

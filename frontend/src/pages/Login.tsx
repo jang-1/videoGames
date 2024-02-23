@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 import { useForm } from "react-hook-form"
 import StyledField from '../layout/StyledField';
 import StyledButton from '../layout/StyledButton';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 
@@ -153,7 +153,6 @@ const StyledLink = styled(Link)`
                     <StyledField {...register("password")} type="password" label="Password" variant="standard" />
                     <StyledButton
                       title="Zaloguj się"
-                      color="#da4ea2"
                       type="submit"
                     />
                     <StyledBox>

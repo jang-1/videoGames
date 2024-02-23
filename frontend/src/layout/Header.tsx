@@ -75,7 +75,6 @@ const Img = styled.img`
   height: 500px;
   top: -200px;
   bottom: 0;
-  /* left: -200px; */
   right: 0;
   margin: auto;
   animation: animate 2s infinite ease alternate;

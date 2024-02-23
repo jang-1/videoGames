@@ -14,6 +14,7 @@ const Container = styled.footer`
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 5vh;
 `
 
 const Wrapper = styled.div`
@@ -123,11 +124,11 @@ const Footer = () => {
                 <StyledBox>
                     <Title>Nawigacja</Title>
                     <NavContainer>
-                        <ListItem to="/Home">Strona głowna</ListItem>
-                        <ListItem to="/Games">Gry</ListItem>
-                        <ListItem to="/GameDevs">Twórcy</ListItem>
-                        <ListItem to="/Stores">Sklepy</ListItem>
-                        <ListItem to="/Contact">Kontakt</ListItem>
+                        <ListItem to="/">Strona głowna</ListItem>
+                        <ListItem to="/games">Gry</ListItem>
+                        <ListItem to="/gamedevs">Twórcy</ListItem>
+                        <ListItem to="/stores">Sklepy</ListItem>
+                        <ListItem to="/contact">Kontakt</ListItem>
                     </NavContainer>
                 </StyledBox>
 
@@ -146,7 +147,6 @@ const Footer = () => {
                         <Item><MediaImg  src={Fb} alt="" /></Item>
                         <Item><MediaImg src={Linkedin} alt="" /></Item>
                         <Item><MediaImg src={Instagram} alt="" /></Item>
-
                     </NavContainer>
                 </StyledBox>
             </Right>

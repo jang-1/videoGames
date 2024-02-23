@@ -13,23 +13,23 @@ const Field = styled(TextField)<TextFieldProps>`
   }
 
   & label {
-    color: #870252; /* Kolor etykiety */
+    color: #870252; 
   }
 
   & label.Mui-focused {
-    color: #870252; /* Kolor etykiety po kliknięciu */
+    color: #870252; 
   }
 
   & .MuiInput-underline:before {
-    border-bottom-color: #d3037c; /* Kolor linii podkreślenia przed wprowadzeniem tekstu */
+    border-bottom-color: #d3037c; 
   }
 
   & .MuiInput-underline:after {
-    border-bottom-color: #870252; /* Kolor linii podkreślenia po wprowadzeniu tekstu */
+    border-bottom-color: #870252; 
   }
 
   &:hover .MuiInput-underline:before {
-    border-bottom-color: blue; /* Kolor linii podkreślenia po najechaniu myszką */
+    border-bottom-color: blue; 
   }
 `;
 

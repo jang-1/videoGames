@@ -46,13 +46,13 @@ const Navbar = () => {
                 <Logo src={LogoImg}/>
                 <List>
                     <ListItem to="/">Strona głowna</ListItem>
-                    <ListItem to="/">Gry</ListItem>
-                    <ListItem to="/">Twórcy</ListItem>
-                    <ListItem to="/">Sklepy</ListItem>
-                    <ListItem to="/">Kontakt</ListItem>
+                    <ListItem to="/games">Gry</ListItem>
+                    <ListItem to="/gamedevs">Twórcy</ListItem>
+                    <ListItem to="/stores">Sklepy</ListItem>
+                    <ListItem to="/contact">Kontakt</ListItem>
                 </List>
             </Links>
-            <ListItem to="/login"><ButtonComponent title="Zaloguj się" color="#da4ea2"/></ListItem>
+            <ListItem to="/login"><ButtonComponent title="Zaloguj się" /></ListItem>
             
         </Container>
     </Section>
