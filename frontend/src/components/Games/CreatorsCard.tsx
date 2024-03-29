@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import StyledLink from '../../layout/StyledLink';
 
 interface ICardProps {
+    id: number
     name: string
     games_count:string
     image: string
@@ -54,7 +55,7 @@ const ImageWrapper = styled.div`
 `
 
 
- const CreatorsCard:React.FC<ICardProps> = ({name, games_count, image}) => {
+ const CreatorsCard:React.FC<ICardProps> = ({id, name, games_count, image}) => {
   return (
     <Container>
         <ImageWrapper>
@@ -69,7 +70,7 @@ const ImageWrapper = styled.div`
         </StyledBox>
       </CardContent>
       <CardActions sx={{backgroundColor:"#740343", borderBottomLeftRadius:"20px",borderBottomRightRadius:"20px", width:"100%", display:"flex", flex:1}}>
-        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to="/games/1"/>
+        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to={`/creators/${id}`}/>
       </CardActions>
     </Container>
   );

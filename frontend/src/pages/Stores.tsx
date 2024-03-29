@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import axios, { API_KEY } from '../api/axiosCreate'
 import { useQuery } from '@tanstack/react-query'
 import CardComponent from '../components/Developers/Card'
+import { useState } from 'react'
+import StoreCard from '../components/Stores/StoreCard'
+import StyledButton from '../layout/StyledButton'
 
 const Section = styled.section`
     scroll-snap-align: center;
@@ -27,17 +30,39 @@ const CardWrapper = styled.div`
     align-items: center;
 `
 
-
+const ButtonWrapper = styled.div`
+    width: 100%;
+    align-self: flex-end;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 50px 0;
+`
 
 
 const Stores = () => {
-    const { data:storeList } = useQuery({
-        queryKey: ['stores'],
-        queryFn: () => axios.get(`/stores?${API_KEY}`),
-      })
+  const [currentPage, setCurrentPage] = useState(1);
 
-      console.log(storeList)
+    const { data:storeList, refetch } = useQuery({
+      queryKey: ['stores', currentPage],
+      queryFn: () => axios.get(`/stores?${API_KEY}&page=${currentPage}&page_size=9`),
+    })
+  
     const stores = storeList?.data?.results
+  
+    console.log(storeList)
+  
+    const nextPage = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+        refetch();
+    };
+  
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage((prevPage) => prevPage - 1);
+            refetch();
+        }
+    };
+
       return (
         <Section>
           <Typography gutterBottom variant="h3" component="h1" color="white">
@@ -46,10 +71,14 @@ const Stores = () => {
           <Wrapper>
             {stores?.map(({id, name, games_count, image_background}:any) => (
                 <CardWrapper key={id}>
-                  <CardComponent name={name} games_count={games_count} image={image_background}/>
+                  <StoreCard id={id} name={name} games_count={games_count} image={image_background}/>
                 </CardWrapper>
             ))}
           </Wrapper>
+          <ButtonWrapper>
+                <StyledButton onClick={prevPage} title="Poprzednia" />
+                <StyledButton onClick={nextPage} title="Następna" />
+          </ButtonWrapper>
         </Section>
       )
 }

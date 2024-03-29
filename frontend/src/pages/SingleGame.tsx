@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import axios, { API_KEY } from '../api/axiosCreate'
 import styled from 'styled-components'
+import { useEffect, useRef } from 'react'
 
 const StyledLink = styled(Link) `
     color:white;
@@ -33,7 +34,7 @@ const Right = styled.div`
 
 const StyledImage = styled.img`
     object-fit: contain;
-    width: 80%;
+    width: 50vw;
     border-radius: 30px;
 `
 
@@ -57,23 +58,36 @@ const TextWrapper = styled.div`
 const SingleGame = () => {
 
     const {id} = useParams()
-    console.log(id)
 
-    const { data: singleGame } = useQuery({
+    const titleRef = useRef(null);
+
+    const { data: singleGame, refetch } = useQuery({
         queryKey: ['game', id], 
         queryFn: () => {
             return axios.get(`/games/${id}?${API_KEY}`);
         },
+        enabled: false, // Set enabled to false
     });
     const game = singleGame?.data;
-    console.log(singleGame)
-    console.log(game)
+    // console.log(singleGame)
+    // console.log(game)
 
-
+    useEffect(() => {
+        const fetchData = async () => {
+          await refetch();
+          const { offsetTop }: any = titleRef.current;
+    
+          window.requestAnimationFrame(() => {
+            window.scrollTo(0, offsetTop);
+          });
+        };
+    
+        fetchData();
+      }, [id, refetch]);
 
   return (
     <Container>
-        <Typography sx={{fontSize:"40px"}} >{game?.name}</Typography>
+        <Typography ref={titleRef} sx={{fontSize:"40px"}} >{game?.name}</Typography>
         <Breadcrumbs aria-label="breadcrumb" sx={{color:"white"}}>
             <StyledLink  color="white" to="/games" >
                 Games

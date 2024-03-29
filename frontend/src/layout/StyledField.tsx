@@ -14,6 +14,7 @@ const Field = styled(TextField)<TextFieldProps>`
 
   & label {
     color: #870252; 
+    font-weight: 700;
   }
 
   & label.Mui-focused {
@@ -28,9 +29,10 @@ const Field = styled(TextField)<TextFieldProps>`
     border-bottom-color: #870252; 
   }
 
-  &:hover .MuiInput-underline:before {
-    border-bottom-color: blue; 
+  & .MuiInput-root:hover:not(.Mui-disabled, .Mui-error):before{
+    border-bottom-color: #d3037c; 
   }
+
 `;
 
 const StyledField = forwardRef<HTMLInputElement, IStyledField & TextFieldProps>(

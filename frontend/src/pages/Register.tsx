@@ -89,7 +89,7 @@ const Form = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid #870252;
+  border: 3px solid #870252;
   flex-direction: column;
   width: 60%;
   border-radius: 10px;

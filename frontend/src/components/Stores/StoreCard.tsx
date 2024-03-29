@@ -19,7 +19,7 @@ const StyledBox = styled.div`
 `
 
 
- const CardComponent:React.FC<ICardProps> = ({id, name, games_count, image}) => {
+ const StoreCard:React.FC<ICardProps> = ({id, name, games_count, image}) => {
   return (
     <Card sx={{ width: 345,border:"2px solid #870252" }}>
       <CardMedia
@@ -38,10 +38,10 @@ const StyledBox = styled.div`
         </StyledBox>
       </CardContent>
       <CardActions sx={{backgroundColor:"#740343"}}>
-        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to={`/developers/${id}`}/>
+        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to={`/stores/${id}`}/>
       </CardActions>
     </Card>
   );
 }
 
-export default CardComponent
+export default StoreCard

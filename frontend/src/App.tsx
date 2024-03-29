@@ -14,6 +14,9 @@ import {
 import Developers from "./pages/Developers";
 import Stores from "./pages/Stores";
 import SingleGame from "./pages/SingleGame";
+import SingleDeveloper from "./pages/SingleDeveloper";
+import SingleCreator from "./pages/SingleCreator";
+import SingleStore from "./pages/SingleStore";
 
 const queryClient = new QueryClient()
 
@@ -56,6 +59,37 @@ const router = createBrowserRouter([
       {
         path: "/gamedevs",
         element: <Developers/>,
+      },
+    ]
+  },
+
+  {
+    path: "/",
+    element: <RootLayout/>,
+    children: [
+      {
+        path: "/developers/:id",
+        element: <SingleDeveloper/>,
+      },
+    ]
+  },
+  {
+    path: "/",
+    element: <RootLayout/>,
+    children: [
+      {
+        path: "/creators/:id",
+        element: <SingleCreator/>,
+      },
+    ]
+  },
+  {
+    path: "/",
+    element: <RootLayout/>,
+    children: [
+      {
+        path: "/stores/:id",
+        element: <SingleStore/>,
       },
     ]
   },
