@@ -9,6 +9,8 @@ import { Suspense } from 'react';
 import { useForm } from "react-hook-form"
 import StyledField from '../layout/StyledField';
 import StyledButton from '../layout/StyledButton';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 
 interface FormData  {
@@ -103,12 +105,25 @@ const Form = styled.form`
   
   const Register: React.FC = () => {
 
+    const navigate = useNavigate()
+
     const {
         register,
         handleSubmit,
         formState: { errors },
       } = useForm<FormData>()
-      const onSubmit = handleSubmit((data) => console.log(data))
+
+      const { registerUser, registerError } = useAuth();
+      const onSubmit = handleSubmit((data) => {
+        if(data.password == data.confirm) {
+          registerUser({
+            name: data.login,
+            email: data.email,
+            password: data.password,
+        });
+        }
+        navigate("/login")
+      })
 
 
   return (
@@ -136,7 +151,7 @@ const Form = styled.form`
             <Right>
                 <Form onSubmit={onSubmit}>
                     <StyledField {...register("login")} label="First name" variant="standard" />
-                    <StyledField {...register("email")} label="Last name" variant="standard" />
+                    <StyledField {...register("email")} label="Email" variant="standard" />
                     <StyledField {...register("password")} type="password" label="Password" variant="standard" />
                     <StyledField {...register("confirm")} type="password" label="Confirm password" variant="standard" />
                     <StyledButton

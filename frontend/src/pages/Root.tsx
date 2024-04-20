@@ -3,7 +3,7 @@ import styled from "styled-components"
 // import Bg from '../assets/bg2.jpg'
 import Header from "../layout/Header"
 import Footer from "../layout/Footer"
-import useScrollToTop from "../hooks/useScrollToTop"
+// import useScrollToTop from "../hooks/useScrollToTop"
 
 const Container = styled.div`
     /* height: 100vh; */

@@ -4,13 +4,15 @@ import Squid from "../assets/sq2.png"
 import Navbar from '../layout/Navbar'
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sphere, MeshDistortMaterial } from "@react-three/drei";
-import { Suspense } from 'react';
+import { Suspense, useContext, useState } from 'react';
 
 import { useForm } from "react-hook-form"
 import StyledField from '../layout/StyledField';
 import StyledButton from '../layout/StyledButton';
 import { Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { AuthContext } from '../context/authContext';
 
 
 interface FormData  {
@@ -116,12 +118,29 @@ const StyledLink = styled(Link)`
   
   const Login: React.FC = () => {
 
+    const navigate = useNavigate()
+    const [error, setError] = useState('');
+
     const {
         register,
         handleSubmit,
         formState: { errors },
       } = useForm<FormData>()
-      const onSubmit = handleSubmit((data) => console.log(data))
+
+
+      const {currentUser, handleLogin}:any= useContext(AuthContext)
+
+      console.log(currentUser)
+  
+      const onSubmit = handleSubmit((data) => {
+         handleLogin({
+            name: data.login,
+            email: data.email,
+            password: data.password,
+        }, setError);
+ 
+        {!error && navigate("/")}
+      })
 
 
   return (
@@ -149,7 +168,7 @@ const StyledLink = styled(Link)`
             <Right>
                 <Form onSubmit={onSubmit}>
                     <StyledField {...register("login")} label="First name" variant="standard" />
-                    <StyledField {...register("email")} label="Last name" variant="standard" />
+                    <StyledField {...register("email")} label="Email" variant="standard" />
                     <StyledField {...register("password")} type="password" label="Password" variant="standard" />
                     <StyledButton
                       title="Zaloguj się"
@@ -161,6 +180,7 @@ const StyledLink = styled(Link)`
                       </Typography>
                       <StyledLink to="/register">Zarejestruj się</StyledLink>
                     </StyledBox>
+                    {error && <Typography color="error">{error}</Typography>}
                 </Form>
             </Right>
         </Container>

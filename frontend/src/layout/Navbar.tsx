@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import LogoImg from "../assets/logo2.png"
 import ButtonComponent from './StyledButton'
 import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from '../context/authContext'
 
 const Section = styled.section`
     display: flex;
@@ -39,6 +41,10 @@ const ListItem = styled(Link)`
 
 
 const Navbar = () => {
+
+    const {currentUser, handleLogout}:any= useContext(AuthContext)
+
+    console.log(currentUser)
   return (
     <Section>
         <Container>
@@ -52,7 +58,9 @@ const Navbar = () => {
                     <ListItem to="/contact">Kontakt</ListItem>
                 </List>
             </Links>
-            <ListItem to="/login"><ButtonComponent title="Zaloguj się" /></ListItem>
+            {!currentUser ? <ListItem to="/login"><ButtonComponent title="Zaloguj się" /></ListItem> : <ButtonComponent onClick={() => {
+                console.log("wylogowano")
+                handleLogout()}} title="Wyloguj się" />}
             
         </Container>
     </Section>

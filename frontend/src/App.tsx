@@ -17,6 +17,8 @@ import SingleGame from "./pages/SingleGame";
 import SingleDeveloper from "./pages/SingleDeveloper";
 import SingleCreator from "./pages/SingleCreator";
 import SingleStore from "./pages/SingleStore";
+import { AuthContextProvider } from "./context/authContext";
+import AddNews from "./pages/AddNews";
 
 const queryClient = new QueryClient()
 
@@ -29,6 +31,16 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home/>,
+      },
+    ]
+  },
+  {
+    path: "/",
+    element: <RootLayout/>,
+    children: [
+      {
+        path: "/addnews",
+        element: <AddNews/>,
       },
     ]
   },
@@ -118,7 +130,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+          <AuthContextProvider>
+
+            <RouterProvider router={router} />  
+          </AuthContextProvider>
     </QueryClientProvider>
   );
 }
