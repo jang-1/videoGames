@@ -6,10 +6,11 @@ import { pink } from '@mui/material/colors';
 interface IButton {
     title?: string
     type?: ButtonHTMLAttributes<HTMLButtonElement>["type"]
-    onClick?: () => void; 
+    onClick?: (e?:any) => void; 
     sx?: SxProps<Theme>
     fsize?: number
     isActive?: boolean
+    variant?: string
 }
 
 
@@ -24,9 +25,9 @@ const ColorButton = styled(Button)<ButtonProps & IButton>(({ theme, sx, fsize, i
 }));
 
 
-const StyledButton:React.FC<IButton> = ({title, type, onClick, sx, fsize, isActive}) => {
+const StyledButton:React.FC<IButton> = ({title, type, onClick, sx, fsize, isActive, variant}) => {
  return (
-   <ColorButton variant="contained" color="secondary" type={type} onClick={onClick} sx={sx} fsize={fsize} isActive={isActive}>
+   <ColorButton variant={!variant ? "contained" : "outlined"} color="secondary" type={type} onClick={onClick} sx={sx} fsize={fsize} isActive={isActive}>
       {title}
    </ColorButton>
  )

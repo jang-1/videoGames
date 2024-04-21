@@ -35,10 +35,10 @@ const StyledBox = styled.div`
         <StyledBox>
 
             <Typography variant="body2" color="white">
-            {release}
+            Relase date: {release}
             </Typography>
             <Typography variant="body2" color="white">
-            {rating}
+            Rating: {rating}
             </Typography>
         </StyledBox>
       </CardContent>

@@ -1,8 +1,9 @@
 const express = require('express');
-const router = express.Router();
 const {register, login, logout} = require('../controllers/auth');
 
-// Definiowanie tras dotyczących użytkowników
+const router = express.Router();
+
+
 router.post('/register', register);
 router.post('/login', login);
 router.post('/logout', logout);

@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Box, CircularProgress, Typography } from '@mui/material'
 import styled from 'styled-components'
 import CardComponent from '../components/Games/Card'
 import { useQuery } from '@tanstack/react-query'
@@ -61,7 +61,7 @@ const Games = () => {
     const genres = genresList?.data.results
 
 
-    const { data: gameList, refetch } = useQuery({
+    const { data: gameList, isLoading ,refetch } = useQuery({
         queryKey: ['games', currentPage, selectedGenre], 
         queryFn: () => {
             const genreQuery = selectedGenre ? `&genres=${selectedGenre}` : '';
@@ -116,13 +116,14 @@ const Games = () => {
                         />
                     ))}
                 </GenresWrapper>
+                {isLoading ? <CircularProgress /> :
                 <GamesWrapper>
                     {games?.map(({id, name, released, rating, background_image }: any) => (
                         <CardWrapper key={name}>
                             <CardComponent id={id} name={name} release={released} rating={rating} image={background_image} />
                         </CardWrapper>
                     ))}
-                </GamesWrapper>
+                </GamesWrapper>}
             </Wrapper>
             <ButtonWrapper>
                 <StyledButton onClick={prevPage} title="Poprzednia" />

@@ -48,7 +48,6 @@ const SectionWrapper = styled.div`
 `
 
 const TextWrapper = styled.div`
-    width: 100%;
     display: flex;
     align-items: center;
     row-gap:20px;
@@ -100,7 +99,7 @@ const SingleStore = () => {
                 <StyledImage src={store?.image_background} />
            
             <Right>
-            <TextWrapper>
+                <TextWrapper>
                     <Typography textAlign="justify" dangerouslySetInnerHTML={{ __html: store?.description }}>
                     </Typography>
                 </TextWrapper>
