@@ -9,6 +9,9 @@ import User from "../../assets/user.png";
 import StyledButton from '../../layout/StyledButton';
 import { AuthContext } from '../../context/authContext';
 import { pl } from 'date-fns/locale/pl';
+import { getText } from '../../lib/getText';
+import { formatDateTime } from '../../lib/formatDateTime';
+import DOMPurify from "dompurify";
 
 const StyledPaper = styled(Paper)`
     width: 100%;
@@ -50,20 +53,13 @@ const Img = styled.img`
     width: 40px;
 `;
 
-const getText = (html:any) => {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    return doc.body.textContent;
-};
+
 
 const CommentCard = ({ data, onEdit, onDelete }:any) => {
     const { currentUser }: any = useContext(AuthContext);
-    const formatDateTime = (dateTime: string) => {
-        const parsedDate = new Date(dateTime);
 
-        parsedDate.setHours(parsedDate.getHours() + 2);
-        const formattedDate = format(parsedDate, 'dd-MM-yyyy HH:mm', { locale: pl });
-        return formattedDate !== 'Invalid Date' ? formattedDate : 'Nieznana data';
-    };
+    console.log(data)
+
     return (
         <StyledPaper elevation={12} sx={{ width: "100%" }}>
             <Container>
@@ -82,7 +78,11 @@ const CommentCard = ({ data, onEdit, onDelete }:any) => {
                         <Typography fontSize={16} fontWeight={"bold"}>{data.user_name}</Typography>
                     </ColumnUserContainer>
                 </Wrapper>
-                <Typography fontSize={16}>{getText(data.review_text)}</Typography>
+                <p
+                        dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(data.review_text),
+                        }}
+                        ></p>
                 {currentUser?.id == data.user_id && <div style={{display:"flex", gap:10,}}>
                     <StyledButton variant='outlined' fsize={10} title="Edytuj" onClick={() => onEdit(data)}/>
                     <StyledButton variant='outlined'fsize={10} title="Usuń" onClick={() => onDelete(data.id)}/>

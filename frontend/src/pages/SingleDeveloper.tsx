@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom'
 import axios, { API_KEY } from '../api/axiosCreate'
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
+import RawgLink from '../layout/RawgLink'
+import { useCreators } from '../hooks/useCreators'
 
 const StyledLink = styled(Link) `
     color:white;
@@ -27,9 +29,9 @@ const Right = styled.div`
     display: flex;
     flex-direction: column;
     flex:2;
+    width: 100%;
     gap:20px;
-    justify-content: center;
-    align-items: center;
+
 `
 
 const StyledImage = styled.img`
@@ -48,7 +50,6 @@ const SectionWrapper = styled.div`
 `
 
 const TextWrapper = styled.div`
-    width: 100%;
     display: flex;
     align-items: center;
     row-gap:20px;
@@ -59,36 +60,37 @@ const SingleDeveloper = () => {
 
     const {id} = useParams()
 
-    const titleRef = useRef(null);
+    const breadcrumbsRef = useRef(null);
 
-    const { data: singleDeveloper, refetch } = useQuery({
-        queryKey: ['developer', id], 
+
+    const {developer, refetchDeveloper} = useCreators(id)
+
+    const { data: fetchedGames } = useQuery({
+        queryKey: ['gamesDevelopers'],
         queryFn: () => {
-            return axios.get(`/developers/${id}?${API_KEY}`);
+          return axios.get(`/games?${API_KEY}&developers=${id}`);
         },
-        enabled: false, // Set enabled to false
-    });
-    const developer = singleDeveloper?.data;
-    console.log(singleDeveloper)
-    console.log(developer)
+      });
+
+
+      const filteredGames = fetchedGames?.data
 
     useEffect(() => {
         const fetchData = async () => {
-          await refetch();
-          const { offsetTop }: any = titleRef.current;
+          await refetchDeveloper();
+          const { offsetTop }: any = breadcrumbsRef.current;
     
           window.requestAnimationFrame(() => {
-            window.scrollTo(0, offsetTop);
+            window.scrollTo(0, offsetTop - 100);
           });
         };
     
         fetchData();
-      }, [id, refetch]);
+      }, [id, refetchDeveloper]);
 
   return (
     <Container>
-        <Typography ref={titleRef} sx={{fontSize:"40px"}} >{developer?.name}</Typography>
-        <Breadcrumbs aria-label="breadcrumb" sx={{color:"white"}}>
+        <Breadcrumbs ref={breadcrumbsRef} aria-label="breadcrumb" sx={{color:"white"}}>
             <StyledLink  color="white" to="/gamedevs" >
                 Developers
             </StyledLink>
@@ -96,11 +98,25 @@ const SingleDeveloper = () => {
         </Breadcrumbs>
         <SectionWrapper>
             <StyledImage src={developer?.image_background} />
+            <Typography sx={{fontSize:"40px"}} color="#da4ea2">{developer?.name}</Typography>
            
             <Right>
                 <TextWrapper>
                     <Typography textAlign="justify" dangerouslySetInnerHTML={{ __html: developer?.description }}>
                     </Typography>
+                </TextWrapper>
+
+                <TextWrapper>
+                    <Typography fontWeight="bold" color="#da4ea2">
+                    Popular Games:
+                    </Typography>
+                    <TextWrapper>
+                        {filteredGames?.results.slice(0,5).map((game:any) => (
+                            <Typography key={game.id} >
+                            {game.name}
+                            </Typography>
+                        ))}
+                    </TextWrapper>
                 </TextWrapper>
 
                 <TextWrapper>
@@ -115,6 +131,7 @@ const SingleDeveloper = () => {
             
             </Right>
         </SectionWrapper>
+        <RawgLink/>
     </Container>
   )
 }

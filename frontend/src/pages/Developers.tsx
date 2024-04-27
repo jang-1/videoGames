@@ -1,11 +1,12 @@
-import { Typography } from '@mui/material'
+import { Skeleton, Typography } from '@mui/material'
 import styled from 'styled-components'
-import axios, { API_KEY } from '../api/axiosCreate'
-import { useQuery } from '@tanstack/react-query'
 import CardComponent from '../components/Developers/Card'
 import CreatorsCard from '../components/Games/CreatorsCard'
 import { useState } from 'react'
 import StyledButton from '../layout/StyledButton'
+import { motion } from 'framer-motion'
+import RawgLink from '../layout/RawgLink'
+import { useCreators } from '../hooks/useCreators'
 
 const Section = styled.section`
     scroll-snap-align: center;
@@ -21,6 +22,8 @@ const Wrapper = styled.div`
     justify-content: space-between;
     flex-wrap: wrap;
     gap:30px;
+    min-height: 1000px;
+
 `
 const CreatorsWrapper = styled.div`
     width: 100%;
@@ -29,14 +32,15 @@ const CreatorsWrapper = styled.div`
     flex-wrap: wrap;
     row-gap:150px;
     margin-top: 100px;
+    min-height: 1000px;
 `
 
-const CardWrapper = styled.div`
+const CardWrapper = styled(motion.div)`
     width: 30%;
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
-`
+`;
 
 const ButtonWrapper = styled.div`
     width: 100%;
@@ -52,25 +56,11 @@ const Developers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentCreatorPage, setCurrentCreatorPage] = useState(1);
 
-
-    const { data: gameDevsList, refetch } = useQuery({
-      queryKey: ['gameDevs', currentPage], 
-      queryFn: () => {
-          return axios.get(`/developers?${API_KEY}&page=${currentPage}&page_size=9`);
-      },
-  });
-  console.log(gameDevsList)
-  const gameDevs = gameDevsList?.data.results;
+  const {gameDevs, gameCreators, refetch, isLoading, refetchCreators, isLoadingCreators} = useCreators(undefined, currentPage, currentCreatorPage)
 
 
-  const { data:gameCreatorsList, refetch:rf } = useQuery({
-    queryKey: ['gameCreators', currentCreatorPage],
-    queryFn: () => axios.get(`/creators?${API_KEY}&page=${currentCreatorPage}&page_size=9`),
-  })
+  const skeletonArray = new Array(9).fill(null); 
 
-  const gameCreators = gameCreatorsList?.data?.results
-
-  console.log(gameCreatorsList)
 
   const nextPage = () => {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -86,49 +76,96 @@ const Developers = () => {
 
   const nextPageCreators = () => {
     setCurrentCreatorPage((prevPage) => prevPage + 1);
-    rf();
+    refetchCreators();
 };
 
 const prevPageCreators = () => {
-    if (currentPage > 1) {
+    if (currentCreatorPage > 1) {
       setCurrentCreatorPage((prevPage) => prevPage - 1);
-        rf();
+      refetchCreators();
     }
 };
 
+const fadeInVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
 
-      return (
-        <Section>
-          <Typography gutterBottom variant="h3" component="h1" color="white">
-              Twórcy gier
-          </Typography>
-          <Wrapper>
-            {gameDevs?.map(({id, name, games_count, image_background}:any) => (
-                <CardWrapper key={id}>
-                  <CardComponent id={id} name={name} games_count={games_count} image={image_background}/>
-                </CardWrapper>
-            ))}
-          </Wrapper>
-            <ButtonWrapper>
-                <StyledButton onClick={prevPage} title="Poprzednia" />
-                <StyledButton onClick={nextPage} title="Następna" />
-            </ButtonWrapper>
-          <Typography gutterBottom variant="h3" component="h1" color="white">
-              Twórcy gier
-          </Typography>
-          <CreatorsWrapper>
-            {gameCreators?.map(({id, name, games_count, image}:any) => (
-                <CardWrapper key={id}>
-                  <CreatorsCard id={id} name={name} games_count={games_count} image={image}/>
-                </CardWrapper>
-            ))}
-          </CreatorsWrapper>
-          <ButtonWrapper>
-                <StyledButton onClick={prevPageCreators} title="Poprzednia" />
-                <StyledButton onClick={nextPageCreators} title="Następna" />
-            </ButtonWrapper>
-        </Section>
-      )
+return (
+  <Section>
+      <Typography gutterBottom variant="h3" component="h1" color="white">
+          Game Developers
+      </Typography>
+      <RawgLink/>
+
+        <Wrapper>
+                {isLoading ? (
+                    skeletonArray.map((_, index) => (
+                      <CardWrapper key={index}>
+                        <Skeleton variant="rectangular" width={345} height={325} />
+                      </CardWrapper>
+                    ))
+                  ): (
+                  <>
+                    {gameDevs?.map(({ id, name, games_count, image_background }:any) => (
+                      <CardWrapper
+                      key={id}
+                      variants={fadeInVariants}
+                      initial="hidden"
+                      animate="visible"
+                      whileHover={{scale:1.1}}
+                  >
+                      <CardComponent id={id} name={name} games_count={games_count} image={image_background} />
+                  </CardWrapper>
+                    ))}
+                  </>
+                )}
+      </Wrapper>
+      <ButtonWrapper>
+          {currentPage > 1 && (
+              <StyledButton onClick={prevPage} title="Previous" />
+          )}
+          {gameDevs && gameDevs.length === 9 && (
+              <StyledButton onClick={nextPage} title="Next" />
+          )}
+      </ButtonWrapper>
+      <Typography gutterBottom variant="h3" component="h1" color="white">
+          Game Creators
+      </Typography>
+      <CreatorsWrapper>
+                {isLoadingCreators ? (
+                    skeletonArray.map((_, index) => (
+                      <CardWrapper key={index}>
+                        <Skeleton variant="rectangular" width={345} height={345} />
+                      </CardWrapper>
+                    ))
+                  ): (
+                  <> 
+                    {gameCreators?.map(({id, name, games_count, image}:any) => (
+                        <CardWrapper
+                            key={id}
+                            variants={fadeInVariants}
+                            initial="hidden"
+                            animate="visible"
+                            whileHover={{scale:1.1}}
+                        >
+                            <CreatorsCard id={id} name={name} games_count={games_count} image={image} />
+                        </CardWrapper>
+                    ))}
+                  </>
+                )}
+      
+      </CreatorsWrapper>
+      <ButtonWrapper>
+          {currentCreatorPage > 1 && (
+              <StyledButton onClick={prevPageCreators} title="Previous" />
+          )}
+          {gameCreators && gameCreators.length === 9 && (
+              <StyledButton onClick={nextPageCreators} title="Next" />
+          )}
+      </ButtonWrapper>
+  </Section>
+);
 }
 
 export default Developers

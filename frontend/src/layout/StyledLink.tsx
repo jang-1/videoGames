@@ -12,11 +12,12 @@ interface ILink extends ButtonProps {
 const ColorButton = styled(Link)<ILink>(({ theme, fsize, sx }) => ({
   color: theme.palette.getContrastText(pink[900]),
   borderRadius:"5px",
-  padding:"5px",
+  padding:"10px 15px",
   textDecoration:"none",
   fontSize: `${fsize}px`,
   textAlign:"center",
   backgroundColor: pink[900],
+  fontFamily: `'Open Sans', sans-serif`,
   sx,
   '&:hover': {
     backgroundColor: pink[700],

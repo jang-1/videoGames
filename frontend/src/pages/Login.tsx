@@ -11,7 +11,6 @@ import StyledField from '../layout/StyledField';
 import StyledButton from '../layout/StyledButton';
 import { Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import { AuthContext } from '../context/authContext';
 
 
@@ -128,9 +127,8 @@ const StyledLink = styled(Link)`
       } = useForm<FormData>()
 
 
-      const {currentUser, handleLogin}:any= useContext(AuthContext)
+      const {handleLogin}= useContext(AuthContext)
 
-      console.log(currentUser)
   
       const onSubmit = handleSubmit((data) => {
          handleLogin({
@@ -171,14 +169,14 @@ const StyledLink = styled(Link)`
                     <StyledField {...register("email")} label="Email" variant="standard" />
                     <StyledField {...register("password")} type="password" label="Password" variant="standard" />
                     <StyledButton
-                      title="Zaloguj się"
+                      title="Login"
                       type="submit"
                     />
                     <StyledBox>
                       <Typography color="#870252">
-                        Nie masz jeszcze konta?
+                        Still don't have account?
                       </Typography>
-                      <StyledLink to="/register">Zarejestruj się</StyledLink>
+                      <StyledLink to="/register">Sign Up</StyledLink>
                     </StyledBox>
                     {error && <Typography color="error">{error}</Typography>}
                 </Form>

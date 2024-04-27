@@ -1,10 +1,12 @@
 const express = require('express');
 var cors = require('cors')
+var multer = require('multer')
 var cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const authRoutes = require("./routes/auth")
 const postsRoutes = require("./routes/posts")
 const reviewsRoutes = require("./routes/reviews")
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 3000;
@@ -27,6 +29,38 @@ app.use((req, res, next) => {
 });
 
 app.use(cookieParser())
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../frontend/public/upload');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  }
+});
+
+const fileFilter = function (req, file, cb) {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    return cb(new Error('Only image files are allowed!'), false);
+  }
+  cb(null, true);
+};
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter
+});
+
+app.post("/api/upload", upload.single("file"), function (req, res) {
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
+  return res.status(200).json({ filename: file.filename });
+});
+
 
 
 // Ustawienie parsera do przetwarzania danych JSON

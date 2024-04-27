@@ -1,19 +1,25 @@
 import { Typography } from '@mui/material';
-import React, {useState} from "react"
+import axios from 'axios';
+import  {useContext, useState} from "react"
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { AuthContext } from '../context/authContext';
+import StyledButton from '../layout/StyledButton';
+import { usePosts } from '../hooks/usePosts';
 
 
 const Container = styled.div`
     gap:20px;
-    margin: 20px;
-    display: flex;
+
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 `
 
 const Content = styled.div`
-        flex: 3;
+        width: 70%;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -31,87 +37,82 @@ const EditorContainer = styled.div`
       .ql-container.ql-snow, .ql-toolbar.ql-snow {
         border:  2px solid #870252; 
       }
+
+      .ql-formats span {
+      color:white;
+    }
+    .ql-stroke {
+      stroke: white;
+    }
 `
 
-const Menu = styled.div`
-          flex: 2;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-`
-const Item = styled.div`
-          border:  2px solid #870252;
-          padding: 10px;
-          flex:1;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          font-size: 12px;
-`
+
 const Buttons = styled.div`
             display: flex;
-            justify-content: space-between;
+            gap:20px;
+            align-items: center;
+            margin-top: 50px;
 
-            :first-child{
-              cursor: pointer;
-              color: teal;
-              background-color: white;
-              border: 1px solid teal;
-              padding: 3px 5px;
-            }
-            :last-child{
-              cursor: pointer;
-              color: white;
-              background-color: teal;
-              border: 1px solid teal;
-              padding: 3px 5px;
-            }
 `
+
+const StyledUploadInput = styled.input `
+  display: none;
+
+`
+
+const StyledUploadLabel = styled.label`
+  padding: 10px 15px;
+  background-color: #870252;
+  color: white;
+  cursor: pointer;
+`;
 
 
 export default function AddNews() {
-  const state = useLocation().state;
-  const [value, setValue] = useState(state?.title || "");
-  const [title, setTitle] = useState(state?.desc || "");
-  const [file, setFile] = useState(null);
-  const [cat, setCat] = useState(state?.cat || "");
+  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [file, setFile] = useState<any>(null);
+  const [showError, setShowError] = useState(false);
+ 
+  
+  const {currentUser} = useContext(AuthContext)
 
-  // const navigate = useNavigate()
+  const {addPost} = usePosts()
 
+  const navigate = useNavigate()
   const upload = async () => {
-    // try {
-    //   const formData = new FormData();
-    //   formData.append("file", file);
-    //   const res = await axios.post("/upload", formData);
-    //   return res.data;
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post('http://localhost:3000/api/upload', formData)
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleClick = async (e:any) => {
     e.preventDefault();
+
+
+    if (!title || !file || !value) {
+      setShowError(true);
+      return;
+    }
+
     const imgUrl = await upload();
 
-    // try {
-    //   state
-    //     ? await axios.put(`/posts/${state.id}`, {
-    //         title,
-    //         desc: value,
-    //         cat,
-    //         img: file ? imgUrl : "",
-    //       })
-    //     : await axios.post(`/posts/`, {
-    //         title,
-    //         desc: value,
-    //         cat,
-    //         img: file ? imgUrl : "",
-    //         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-    //       });
-    //       navigate("/")
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      addPost.mutate({
+        title,
+        desc: value,
+        img: file ? imgUrl : "",
+        uid: currentUser?.id
+      })
+          navigate("/")
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -124,38 +125,32 @@ export default function AddNews() {
           />
           <EditorContainer>
             <ReactQuill
-              // theme="snow"
               value={value}
               onChange={setValue}
               style={{height: "100%", border: "none"}}
             />
           </EditorContainer>
+
         </Content>
-        <Menu>
-          <Item>
-            <Typography fontSize={20}>Publish</Typography>
-            <span>
-              <b>Status: </b> Draft
-            </span>
-            <span>
-              <b>Visibility: </b> Public
-            </span>
-            <input
-              style={{ display: "none", textDecoration: "underline", cursor: "pointer" }}
+        <Buttons>
+
+          <StyledUploadInput
               type="file"
               id="file"
               name=""
               onChange={(e:any) => setFile(e.target.files[0])}
-            />
-            <label className="file" htmlFor="file">
+              />
+            <StyledUploadLabel className="file" htmlFor="file">
               Upload Image
-            </label>
-            <Buttons>
-              <button>Save as a draft</button>
-              <button onClick={handleClick}>Publish</button>
-            </Buttons>
-          </Item>
-        </Menu>
+            </StyledUploadLabel>
+            <StyledButton title={"publish"} onClick={handleClick}/>
+          </Buttons>
+          {showError && (!title || !file) && (
+            <Typography variant="caption" style={{ color: "red", marginTop: "10px" }}>
+              Please fill title, description or image
+            </Typography>
+          )}
+
       </Container>
   );
 }

@@ -19,8 +19,10 @@ import SingleCreator from "./pages/SingleCreator";
 import SingleStore from "./pages/SingleStore";
 import { AuthContextProvider } from "./context/authContext";
 import AddNews from "./pages/AddNews";
+import SinglePost from "./pages/SinglePost";
+import Contact from "./pages/Contact";
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 
 const router = createBrowserRouter([
@@ -31,6 +33,16 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home/>,
+      },
+    ]
+  },
+  {
+    path: "/",
+    element: <RootLayout/>,
+    children: [
+      {
+        path: "/:id",
+        element: <SinglePost/>,
       },
     ]
   },
@@ -115,7 +127,10 @@ const router = createBrowserRouter([
       },
     ]
   },
-
+  {
+    path: "/contact",
+    element: <Contact/>,
+  },
   {
     path: "/login",
     element: <Login />,

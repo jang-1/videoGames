@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom'
 import axios, { API_KEY } from '../api/axiosCreate'
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
+import RawgLink from '../layout/RawgLink'
+import { useStores } from '../hooks/useStores'
 
 const StyledLink = styled(Link) `
     color:white;
@@ -28,8 +30,7 @@ const Right = styled.div`
     flex-direction: column;
     flex:2;
     gap:20px;
-    justify-content: center;
-    align-items: center;
+
 `
 
 const StyledImage = styled.img`
@@ -58,50 +59,67 @@ const SingleStore = () => {
 
     const {id} = useParams()
 
-    const titleRef = useRef(null);
+    const breadcrumbsRef = useRef(null);
 
-    const { data: singleStore, refetch } = useQuery({
-        queryKey: ['store', id], 
+    const { store, refetchStore } = useStores(id)
+
+
+    const { data: fetchedGames, refetch: refetchGames } = useQuery({
+        queryKey: ['gamesStore'],
         queryFn: () => {
-            return axios.get(`/stores/${id}?${API_KEY}`);
+          return axios.get(`/games?${API_KEY}&store=${id}`);
         },
-        enabled: false, // Set enabled to false
-    });
-    const store = singleStore?.data;
-    console.log(singleStore)
-    // console.log(game)
+      });
 
+      console.log(fetchedGames)
+      
+      const filteredGames = fetchedGames?.data
+
+      console.log(filteredGames)
     useEffect(() => {
         const fetchData = async () => {
-          await refetch();
-          const { offsetTop }: any = titleRef.current;
+          await refetchStore();
+          await refetchGames();
+          const { offsetTop }: any = breadcrumbsRef.current;
     
           window.requestAnimationFrame(() => {
-            window.scrollTo(0, offsetTop);
+            window.scrollTo(0, offsetTop - 100);
           });
         };
     
         fetchData();
-      }, [id, refetch]);
+      }, [id, refetchStore]);
+
 
   return (
     <Container>
-        <Typography ref={titleRef} sx={{fontSize:"40px"}} >{store?.name}</Typography>
-        <Breadcrumbs aria-label="breadcrumb" sx={{color:"white"}}>
+        <Breadcrumbs ref={breadcrumbsRef} aria-label="breadcrumb" sx={{color:"white"}}>
             <StyledLink  color="white" to="/stores" >
                 Stores
             </StyledLink>
             <Typography color="#da4ea2">{store?.name}</Typography>
         </Breadcrumbs>
         <SectionWrapper>
-
-           
-                <StyledImage src={store?.image_background} />
+            <StyledImage src={store?.image_background} />
+            <Typography sx={{fontSize:"40px"}} color="#da4ea2">{store?.name}</Typography>   
            
             <Right>
                 <TextWrapper>
                     <Typography textAlign="justify" dangerouslySetInnerHTML={{ __html: store?.description }}>
                     </Typography>
+                </TextWrapper>
+
+                <TextWrapper>
+                    <Typography fontWeight="bold" color="#da4ea2">
+                    Popular Games:
+                    </Typography>
+                    <TextWrapper>
+                        {filteredGames?.results.slice(0,5).map((game:any) => (
+                            <Typography key={game.id} >
+                            {game.name}
+                            </Typography>
+                        ))}
+                    </TextWrapper>
                 </TextWrapper>
 
                 <TextWrapper>
@@ -113,8 +131,11 @@ const SingleStore = () => {
                     </TextWrapper>
                 </TextWrapper>
 
+
+            
             </Right>
         </SectionWrapper>
+        <RawgLink/>
     </Container>
   )
 }

@@ -93,8 +93,9 @@ const Img = styled.img`
 
 const Header = () => {
   return (
+    <>
+    <Navbar />
     <HeaderSection>
-        <Navbar />
         <Container>
             <Left>
                 <Title>Twoja pasja, nasza platforma. Odkrywaj, graj i łącz się z grami wideo na nowy sposób!</Title>
@@ -123,6 +124,7 @@ const Header = () => {
             </Right>
         </Container>
     </HeaderSection>
+                        </>
   )
 }
 

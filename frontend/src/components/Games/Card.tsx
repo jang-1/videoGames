@@ -22,7 +22,7 @@ const StyledBox = styled.div`
 
  const CardComponent:React.FC<ICardProps> = ({id, name, release, rating, image}) => {
   return (
-    <Card sx={{ width: 345,border:"2px solid #870252" }}>
+    <Card sx={{ width: 345,border:"2px solid #870252", background:"#870252" }}>
       <CardMedia
         sx={{ height: 180, backgroundPosition:"top" }}
         image={image}

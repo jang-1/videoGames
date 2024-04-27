@@ -113,7 +113,7 @@ const Form = styled.form`
         formState: { errors },
       } = useForm<FormData>()
 
-      const { registerUser, registerError } = useAuth();
+      const { registerUser, registerError }:any = useAuth();
       const onSubmit = handleSubmit((data) => {
         if(data.password == data.confirm) {
           registerUser({
@@ -155,7 +155,7 @@ const Form = styled.form`
                     <StyledField {...register("password")} type="password" label="Password" variant="standard" />
                     <StyledField {...register("confirm")} type="password" label="Confirm password" variant="standard" />
                     <StyledButton
-                      title="Zarejestruj się"
+                      title="Sign up"
                       type="submit"
                     />
                 </Form>

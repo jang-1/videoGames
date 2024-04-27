@@ -56,7 +56,7 @@ const gameId = req.params.gameId;
 
     // Jeśli nie znaleziono recenzji dla podanego ID gry
     if (results.length === 0) {
-      res.status(404).json({ message: 'Nie znaleziono recenzji dla podanego ID gry' });
+      res.status(200).json([]);
       return;
     }
 

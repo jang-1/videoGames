@@ -1,9 +1,9 @@
 import { Breadcrumbs, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
-import axios, { API_KEY } from '../api/axiosCreate'
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
+import RawgLink from '../layout/RawgLink'
+import { useCreators } from '../hooks/useCreators'
 
 const StyledLink = styled(Link) `
     color:white;
@@ -59,36 +59,27 @@ const SingleCreator = () => {
 
     const {id} = useParams()
 
-    const titleRef = useRef(null);
+    const breadcrumbsRef = useRef(null);
 
-    const { data: singleCreator, refetch } = useQuery({
-        queryKey: ['creator', id], 
-        queryFn: () => {
-            return axios.get(`/creators/${id}?${API_KEY}`);
-        },
-        enabled: false,
-    });
-    const creator = singleCreator?.data;
-    console.log(singleCreator)
-    console.log(creator)
+    const {creator, refetchCreator} = useCreators(id)
+
 
     useEffect(() => {
         const fetchData = async () => {
-          await refetch();
-          const { offsetTop }: any = titleRef.current;
+          await refetchCreator();
+          const { offsetTop }: any = breadcrumbsRef.current;
     
           window.requestAnimationFrame(() => {
-            window.scrollTo(0, offsetTop);
+            window.scrollTo(0, offsetTop - 100);
           });
         };
     
         fetchData();
-      }, [id, refetch]);
+      }, [id, refetchCreator]);
 
   return (
     <Container>
-        <Typography ref={titleRef} sx={{fontSize:"40px"}} >{creator?.name}</Typography>
-        <Breadcrumbs aria-label="breadcrumb" sx={{color:"white"}}>
+        <Breadcrumbs ref={breadcrumbsRef} aria-label="breadcrumb" sx={{color:"white"}}>
             <StyledLink  color="white" to="/gamedevs" >
                 Creators
             </StyledLink>
@@ -96,6 +87,7 @@ const SingleCreator = () => {
         </Breadcrumbs>
         <SectionWrapper>
             <StyledImage src={creator?.image} />
+            <Typography sx={{fontSize:"40px"}} color="#da4ea2">{creator?.name}</Typography>
             <Right>
                 <TextWrapper>
                     <Typography textAlign="justify" dangerouslySetInnerHTML={{ __html: creator?.description }}>
@@ -136,6 +128,7 @@ const SingleCreator = () => {
                 </TextWrapper>
             </Right>
         </SectionWrapper>
+        <RawgLink/>
     </Container>
   )
 }

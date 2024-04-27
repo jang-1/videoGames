@@ -1,93 +1,69 @@
-import styled from 'styled-components'
+import React, { useContext } from 'react';
+import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
-import CardComponent from './layout/Card'
-import StyledButton from '../../layout/StyledButton';
+import CardComponent from './layout/Card';
 import { AuthContext } from '../../context/authContext';
-import { useContext } from 'react';
+import { usePosts } from '../../hooks/usePosts';
 import StyledLink from '../../layout/StyledLink';
-
+import { motion } from 'framer-motion';
 
 const Section = styled.section`
-    height: 100vh;
     scroll-snap-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap:30px;
-`
+    gap: 30px;
+`;
+
 const Wrapper = styled.div`
     width: 70%;
     display: flex;
     justify-content: space-between;
-    gap:50px;
+    gap: 50px;
     flex-wrap: wrap;
-`
+`;
 
-const CardWrapper = styled.div`
-    width: 30%;
+const CardWrapper = styled(motion.div)`
+    width: 345px;
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-`
+    background-color: #740343;
+`;
 
 const TitleContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-grow: 1; /* occupy remaining space */
-`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+`;
 
-const BContainer = styled.div`
-  align-self: flex-end; /* move the button to the right */
-  margin-right: 10px;
-`
+const Updates: React.FC = () => {
+    const { fetchedPosts } = usePosts();
+    const posts = fetchedPosts?.data;
 
+    const {currentUser} = useContext(AuthContext);
 
+    return (
+        <Section>
+            <TitleContainer>
+                <Typography variant="h3" component="h1" color="white">
+                    News
+                </Typography>
+                {currentUser?.role === 'admin' && (
+                    <StyledLink to="/addnews" title="Add news" fsize={20} />
+                )}
+            </TitleContainer>
+            <Wrapper>
+                {posts?.map(({ id, title, desc, img }: any) => (
+                    <CardWrapper key={id} whileHover={{ scale: 1.1 }}>
+                        <CardComponent id={id} title={title} desc={desc} img={`public/upload/${img}`} />
+                    </CardWrapper>
+                ))}
+            </Wrapper>
+        </Section>
+    );
+};
 
-const Updates = () => {
-
-  const listOfNews = [
-    {title: "one", teaser:"loremloremloremloremloremloremloremloremlorem"},
-    {title: "two", teaser:"loremloremloremloremloremloremloremloremlorem"},
-    {title: "three", teaser:"loremloremloremloremloremloremloremloremlorem"},
-    {title: "four", teaser:"loremloremloremloremloremloremloremloremlorem"},
-    {title: "five", teaser:"loremloremloremloremloremloremloremloremlorem"},
-    {title: "six", teaser:"loremloremloremloremloremloremloremloremlorem"},
-  ]
-
-  const {currentUser}:any = useContext(AuthContext)
-  return (
-    <Section>
-      <ButtonContainer>
-
-      <TitleContainer>
-          <Typography gutterBottom variant="h3" component="h1" color="white">
-              Aktualności
-          </Typography>
-        </TitleContainer>
-        {currentUser?.role === "admin" &&
-          <BContainer>
-            <StyledLink to="/addnews" title="Add news" fsize={20}/>
-          </BContainer>
-        }
-      </ButtonContainer>
-      <Wrapper>
-        {listOfNews.map(({title, teaser}) => (
-            <CardWrapper>
-              <CardComponent title={title} teaser={teaser}/>
-            </CardWrapper>
-        ))}
-      </Wrapper>
-    </Section>
-  )
-}
-
-export default Updates
+export default Updates;

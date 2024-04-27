@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Breadcrumbs, Typography, Button } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
-import axios, { API_KEY } from '../api/axiosCreate';
+import  { useContext, useEffect, useRef, useState } from 'react';
+import { Breadcrumbs, Typography } from '@mui/material';
+import { Link, Params, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -12,6 +10,11 @@ import { useReview } from '../hooks/useReview';
 import Rating from '@mui/material/Rating';
 import CommentCard from '../components/SingleGame/CommentCard';
 import EditReviewForm from '../components/SingleGame/EditReviewForm';
+import { motion } from 'framer-motion';
+import RawgLink from '../layout/RawgLink';
+import { useGames } from '../hooks/useGames';
+import { queryClient } from '../App';
+
 
 const StyledLink = styled(Link)`
     color: white;
@@ -83,6 +86,13 @@ const EditorContainer = styled.div`
     .ql-toolbar.ql-snow {
         border: 2px solid #870252;
     }
+
+    .ql-formats span {
+      color:white;
+    }
+    .ql-stroke {
+      stroke: white;
+    }
 `;
 
 const CommentsContainer = styled.div`
@@ -97,50 +107,37 @@ const SingleGame = () => {
     const [title, setTitle] = useState('');
     const [editingReviewId, setEditingReviewId] = useState(null);
     const [showEditForm, setShowEditForm] = useState(false);
-
-    const { currentUser }: any = useContext(AuthContext);
     const { addReview } = useReview();
+    const { currentUser } = useContext(AuthContext);
+    const { id }:Readonly<Params<string>>  = useParams();
 
-    const { id }: any = useParams();
+    const breadcrumbsRef = useRef(null);
 
-    const titleRef = useRef(null);
 
-    const { data: singleGame, refetch } = useQuery({
-        queryKey: ['game', id],
-        queryFn: () => {
-            return axios.get(`/games/${id}?${API_KEY}`);
-        },
-        enabled: false,
-    });
-    const game = singleGame?.data;
+    const {game, refetchSingleGame} = useGames(id)
 
-    const { data: fetchedReviews, refetch: refetchReviews } = useQuery({
-        queryKey: ['reviews', id],
-        queryFn: () => {
-            return axios.get(`http://localhost:3000/api/reviews/${id}`);
-        },
-        enabled: true,
-    });
-    const reviews = fetchedReviews?.data;
+    const {reviews, refetchReviews, deleteReviewMutation, editReviewMutation} = useReview(id)
+
+    console.log(reviews)
 
     useEffect(() => {
         const fetchData = async () => {
-            await refetch();
-            const { offsetTop }: any = titleRef.current;
+            await refetchSingleGame();
+            const { offsetTop }: any = breadcrumbsRef.current;
 
             window.requestAnimationFrame(() => {
-                window.scrollTo(0, offsetTop);
+                window.scrollTo(0, offsetTop - 100);
             });
         };
 
         fetchData();
-    }, [id, refetch]);
+    }, [id, refetchSingleGame]);
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
         addReview.mutate(
-            { userId: parseInt(currentUser.id), gameId: parseInt(id), review: value, title: title },
+            { userId: currentUser?.id, gameId: id, review: value, title: title },
             {
                 onSuccess: (data) => {
                     console.log('Review submitted successfully:', data);
@@ -156,23 +153,35 @@ const SingleGame = () => {
     };
 
     const handleEditReview = async (formData: any) => {
-        try {
-            await axios.put(`http://localhost:3000/api/reviews/${formData.id}`, formData);
-            setEditingReviewId(null);
-            setShowEditForm(false);
-            refetchReviews();
-        } catch (error) {
-            console.error('Edit review failed:', error);
-        }
+            editReviewMutation.mutate(formData, {onSuccess: () => {
+                setEditingReviewId(null);
+                setShowEditForm(false);
+                refetchReviews();
+            },
+            onError: (error) => {
+                console.error('Edit review failed:', error);
+            }}
+        )
     };
 
     const handleDeleteReview = async (reviewId: any) => {
-        try {
-            await axios.delete(`http://localhost:3000/api/reviews/${reviewId}`);
-            refetchReviews();
-        } catch (error) {
-            console.error('Delete review failed:', error);
-        }
+        deleteReviewMutation.mutate(reviewId, {
+            onSuccess: () => {
+                console.log("Usunieto")
+                    queryClient.invalidateQueries(
+                        {
+                          queryKey: ['reviews'],
+                          exact: true 
+                        }
+                      )
+refetchReviews()
+    
+
+            },
+            onError: (error) => {
+                console.error('Edit review failed:', error);
+            }
+        });
     };
 
     const handleEditButtonClick = (reviewId: any) => {
@@ -186,12 +195,10 @@ const SingleGame = () => {
     };
 
     console.log(game?.rating);
+
     return (
         <Container>
-            <Typography ref={titleRef} sx={{ fontSize: '40px' }}>
-                {game?.name}
-            </Typography>
-            <Breadcrumbs aria-label="breadcrumb" sx={{ color: 'white' }}>
+            <Breadcrumbs ref={breadcrumbsRef} aria-label="breadcrumb" sx={{ color: 'white' }}>
                 <StyledLink color="white" to="/games">
                     Games
                 </StyledLink>
@@ -199,6 +206,9 @@ const SingleGame = () => {
             </Breadcrumbs>
             <SectionWrapper>
                 <StyledImage src={game?.background_image} />
+                <Typography sx={{ fontSize: '40px' }} color="#da4ea2">
+                    {game?.name}
+                </Typography>
                 <Right>
                     <TextWrapper>
                         <Typography textAlign="justify">{game?.description_raw}</Typography>
@@ -215,7 +225,7 @@ const SingleGame = () => {
                         </Typography>
                         <TextWrapper>
                             {game?.platforms.map((p: any) => (
-                                <Typography>{p.platform.name}</Typography>
+                                <Typography key={p.platform.name}>{p.platform.name}</Typography>
                             ))}
                         </TextWrapper>
                     </TextWrapper>
@@ -225,7 +235,7 @@ const SingleGame = () => {
                         </Typography>
                         <TextWrapper>
                             {game?.stores.map((s: any) => (
-                                <Typography>{s.store.name}</Typography>
+                                <Typography key={s.store.name}>{s.store.name}</Typography>
                             ))}
                         </TextWrapper>
                     </TextWrapper>
@@ -235,7 +245,7 @@ const SingleGame = () => {
                         </Typography>
                         <TextWrapper>
                             {game?.genres.map((g: any) => (
-                                <Typography>{g.name}</Typography>
+                                <Typography key={g.name}>{g.name}</Typography>
                             ))}
                         </TextWrapper>
                     </TextWrapper>
@@ -245,7 +255,7 @@ const SingleGame = () => {
                         </Typography>
                         <TextWrapper>
                             {game?.developers.map((d: any) => (
-                                <Typography>{d.name}</Typography>
+                                <Typography key={d.name}>{d.name}</Typography>
                             ))}
                         </TextWrapper>
                     </TextWrapper>
@@ -257,11 +267,12 @@ const SingleGame = () => {
                             <Rating value={game?.rating || 0} precision={0.01} readOnly />
                         </TextWrapper>
                     </TextWrapper>
+                    <RawgLink/>
                 </Right>
                 {currentUser ? (
                     <Content>
                         <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
-                            Skomentuj grę
+                            Comment game
                         </Typography>
                         <StyledInput
                             type="text"
@@ -276,34 +287,47 @@ const SingleGame = () => {
                     </Content>
                 ) : (
                     <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
-                        Zaloguj się, aby dodać komentarz!
+                        Sign in to add a comment!
                     </Typography>
                 )}
-                <CommentsContainer>
-                {reviews ? <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
-                        Recenzje / Komentarze
-                    </Typography>: <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
-                       Brak Recenzji / Komentarzy, dodaj jakis!
-                    </Typography>}
-                    {reviews &&
-                        (reviews as any).map((r: any) =>
-                            editingReviewId === r.id && showEditForm ? (
-                                <EditReviewForm
-                                    key={r.id}
-                                    reviewData={r}
-                                    onSave={handleEditReview}
-                                    onCancel={handleCancelEdit}
-                                />
-                            ) : (
-                                <CommentCard
-                                    key={r.id}
-                                    data={r}
-                                    onEdit={() => handleEditButtonClick(r.id)}
-                                    onDelete={() => handleDeleteReview(r.id)}
-                                />
-                            )
-                        )}
-                </CommentsContainer>
+                <div
+                    style={{width:"100%"}}
+                >
+                    {!reviews || reviews.length === 0 ? (
+    <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
+        No reviews / Comments, add one!
+    </Typography>
+) : (
+    <CommentsContainer>
+        <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
+            Reviews
+        </Typography>
+        {reviews?.map((r: any) =>
+            editingReviewId === r.id && showEditForm ? (
+                <EditReviewForm
+                    key={r.id}
+                    reviewData={r}
+                    onSave={handleEditReview}
+                    onCancel={handleCancelEdit}
+                />
+            ) : (
+                <motion.div
+                    key={r.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                >
+                    <CommentCard
+                        data={r}
+                        onEdit={() => handleEditButtonClick(r.id)}
+                        onDelete={() => handleDeleteReview(r.id)}
+                    />
+                </motion.div>
+            )
+        )}
+    </CommentsContainer>
+)}
+                </div>
             </SectionWrapper>
         </Container>
     );

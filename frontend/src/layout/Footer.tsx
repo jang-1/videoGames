@@ -99,9 +99,9 @@ const Title = styled.h3`
     align-self:flex-start;
 `
 const MediaImg = styled.img`
-    width: 50%;
+    width: 50px;
     padding: 10px 0;
-    height: 100%;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -122,18 +122,18 @@ const Footer = () => {
             </Left>
             <Right>
                 <StyledBox>
-                    <Title>Nawigacja</Title>
+                    <Title>Menu</Title>
                     <NavContainer>
-                        <ListItem to="/">Strona głowna</ListItem>
-                        <ListItem to="/games">Gry</ListItem>
-                        <ListItem to="/gamedevs">Twórcy</ListItem>
-                        <ListItem to="/stores">Sklepy</ListItem>
-                        <ListItem to="/contact">Kontakt</ListItem>
+                        <ListItem to="/">Home</ListItem>
+                        <ListItem to="/games">Games</ListItem>
+                        <ListItem to="/gamedevs">Creators</ListItem>
+                        <ListItem to="/stores">Shop</ListItem>
+                        <ListItem to="/contact">Contact</ListItem>
                     </NavContainer>
                 </StyledBox>
 
                 <StyledBox>
-                    <Title>Kontakt</Title>
+                    <Title>Contact</Title>
                     <NavContainer>
                         <Item>123456789</Item>
                         <Item>test@test.com</Item>
