@@ -1,22 +1,24 @@
 const db = require("../db");
-const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
+
 
 const getPosts = (req, res) => {
-  const sql = 'SELECT * FROM posts';
-  db.query(sql, [], (err, results) => {
-    if (err) {
-      console.error('Błąd podczas pobierania recenzji: ', err);
-      res.status(500).json({ error: 'Wystąpił błąd podczas pobierania recenzji' });
-      return;
-    }
+  const { page = 1, limit = 9 } = req.query;
+  const offset = (page - 1) * limit;
+  
+  const sql = 'SELECT * FROM posts LIMIT ? OFFSET ?';
+  db.query(sql, [parseInt(limit), offset], (err, results) => {
+      if (err) {
+          console.error('Błąd podczas pobierania recenzji: ', err);
+          res.status(500).json({ error: 'Wystąpił błąd podczas pobierania posta' });
+          return;
+      }
 
-    if (results.length === 0) {
-      res.status(404).json({ message: 'Nie znaleziono recenzji' });
-      return;
-    }
+      if (results.length === 0) {
+          res.status(404).json({ message: 'Nie znaleziono postów' });
+          return;
+      }
 
-    res.status(200).json(results);
+      res.status(200).json(results);
   });
 };
 
@@ -26,12 +28,12 @@ const getPost = (req, res) => {
   db.query(sql, [postId], (err, result) => {
     if (err) {
       console.error('Błąd podczas pobierania recenzji: ', err);
-      res.status(500).json({ error: 'Wystąpił błąd podczas pobierania recenzji' });
+      res.status(500).json({ error: 'Wystąpił błąd podczas pobierania postów' });
       return;
     }
 
     if (result.length === 0) {
-      res.status(404).json({ message: 'Nie znaleziono recenzji dla podanego ID' });
+      res.status(404).json({ message: 'Nie znaleziono posta dla podanego ID' });
       return;
     }
 
@@ -45,12 +47,12 @@ const addPost = (req, res) => {
   const sql = 'INSERT INTO posts (title, `desc`, img, created_at, uid) VALUES (?, ?, ?, ?, ?)';
   db.query(sql, [title, desc, img.filename, currentDate, uid], (err, result) => {
     if (err) {
-      console.error('Błąd podczas dodawania recenzji: ', err);
-      res.status(500).json({ error: 'Wystąpił błąd podczas dodawania recenzji' });
+      console.error('Błąd podczas dodawania posta: ', err);
+      res.status(500).json({ error: 'Wystąpił błąd podczas dodawania posta' });
       return;
     }
 
-    res.status(201).json({ message: 'Recenzja dodana pomyślnie', postId: result.insertId });
+    res.status(201).json({ message: 'Post dodany pomyślnie', postId: result.insertId });
   });
 };
 
@@ -59,12 +61,12 @@ const deletePost = (req, res) => {
   const sql = 'DELETE FROM posts WHERE id = ?';
   db.query(sql, [postId], (err, result) => {
     if (err) {
-      console.error('Błąd podczas usuwania recenzji: ', err);
-      res.status(500).json({ error: 'Wystąpił błąd podczas usuwania recenzji' });
+      console.error('Błąd podczas usuwania posta: ', err);
+      res.status(500).json({ error: 'Wystąpił błąd podczas usuwania posta' });
       return;
     }
 
-    res.status(200).json({ message: 'Recenzja usunięta pomyślnie' });
+    res.status(200).json({ message: 'Post usunięta pomyślnie' });
   });
 };
 
@@ -101,7 +103,7 @@ const updatePost = (req, res) => {
       updatedFields.desc = desc;
     }
     if (img !== currentPost.img && img !== undefined) {
-      updatedFields.img = img;
+      updatedFields.img = img.filename;
     }
     if (uid !== currentPost.uid) {
       updatedFields.uid = uid;

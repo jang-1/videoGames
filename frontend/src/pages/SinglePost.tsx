@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import 'react-quill/dist/quill.snow.css';
 import { AuthContext } from '../context/authContext';
 import StyledButton from '../layout/StyledButton';
-import User from "../assets/user.png"
 import { formatDateTime } from '../lib/formatDateTime';
 import DOMPurify from "dompurify";
 import EditPostForm from '../components/Home/EditPostForm';
@@ -61,30 +60,26 @@ const TextWrapper = styled.div`
 `;
 
 const BoxWrapper = styled.div`
-
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     width: 50vw;
 `;
 
 const UserWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    gap: 10px;
     justify-content: center;
     align-items: center;
 `;
 
 
 const DateContainer = styled.div`
-    display: flex;
-
+    width:max-content;
     gap: 10px;
 `;
 
-const Img = styled.img`
-    width: 40px;
-`;
+
 
 
 
@@ -100,8 +95,9 @@ const SinglePost = () => {
 
     const breadcrumbsRef = useRef(null);
 
-    const { singlePost, refetch } = usePosts(id)
+    const { singlePost, refetch, deletePostMutation } = usePosts(id)
     const post = singlePost?.data;
+
 
 
     useEffect(() => {
@@ -126,6 +122,10 @@ const SinglePost = () => {
             setShowEditForm(true);
     };
 
+    const handleDelete = () => {
+        deletePostMutation.mutate()
+    };
+
 
     return (
         <Container>
@@ -136,23 +136,24 @@ const SinglePost = () => {
                 <Typography color="#da4ea2">{post?.title}</Typography>
             </Breadcrumbs>
             {!showEditForm &&<SectionWrapper>
-                <StyledImage src={`public/upload/${post?.img}`} />
-                <Typography sx={{ fontSize: '40px' }} color="#da4ea2">
-                    {post?.title}
-                </Typography>
+                <StyledImage src={`http://localhost:3000/api/images/${post?.img}`} />
                 <BoxWrapper>
-                    <UserWrapper>
-
-                        <Img src={User} alt="" />
-                        <Typography fontSize={16} fontWeight={"bold"}>{post?.username}</Typography>
-                    </UserWrapper>
+                <UserWrapper>
+                <Typography fontWeight="bold" color="#da4ea2">
+                                Posted by: 
+                    </Typography>
+                    <Typography fontSize={16} fontWeight={"bold"}>{post?.username}</Typography>
+                </UserWrapper>
                 <DateContainer>
                     <Typography fontWeight="bold" color="#da4ea2">
-                                Posted:
-                            </Typography>
+                                Created at:
+                    </Typography>
                     <TextWrapper>{formatDateTime(post?.created_at)}</TextWrapper>
                 </DateContainer>
                 </BoxWrapper>
+                <Typography sx={{ fontSize: '40px' }} color="#da4ea2">
+                    {post?.title}
+                </Typography>
                 <Right>
                     <TextWrapper>
                         <p
@@ -166,6 +167,7 @@ const SinglePost = () => {
             {isAdmin && !showEditForm && (
             <StyledButton onClick={handleEdit} title='Edit Post' />
         )}
+        <StyledButton onClick={() => handleDelete()} title='Delete Post' />
             {showEditForm && (
             <EditPostForm
                 title={title}

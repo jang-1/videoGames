@@ -1,11 +1,21 @@
-import React, { useContext } from 'react';
+import React, {  useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import CardComponent from './layout/Card';
-import { AuthContext } from '../../context/authContext';
 import { usePosts } from '../../hooks/usePosts';
 import StyledLink from '../../layout/StyledLink';
 import { motion } from 'framer-motion';
+import StyledButton from '../../layout/StyledButton';
+import { AuthContext } from '../../context/authContext';
+
+interface IPostProps {
+    id:number 
+    title: string 
+    desc:string 
+    img:string
+}
+
+const POST_LIMIT_PER_PAGE = 9
 
 const Section = styled.section`
     scroll-snap-align: center;
@@ -39,11 +49,33 @@ const TitleContainer = styled.div`
     gap: 20px;
 `;
 
-const Updates: React.FC = () => {
-    const { fetchedPosts } = usePosts();
-    const posts = fetchedPosts?.data;
+const ButtonWrapper = styled.div`
+    width: 100%;
+    align-self: flex-end;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 50px 0;
+`;
 
-    const {currentUser} = useContext(AuthContext);
+const Updates: React.FC = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const { fetchedPosts, fetchPosts, refetchPosts } = usePosts(undefined, currentPage);
+
+    const {currentUser} = useContext(AuthContext)
+
+    useEffect(() => {
+        fetchPosts(currentPage);
+    }, [currentPage]);
+
+    const handleNextPage = () => {
+        setCurrentPage(prevPage => prevPage + 1);
+        refetchPosts()
+    };
+
+    const handlePreviousPage = () => {
+        setCurrentPage(prevPage => prevPage - 1);
+        refetchPosts()
+    };
 
     return (
         <Section>
@@ -51,17 +83,21 @@ const Updates: React.FC = () => {
                 <Typography variant="h3" component="h1" color="white">
                     News
                 </Typography>
-                {currentUser?.role === 'admin' && (
-                    <StyledLink to="/addnews" title="Add news" fsize={20} />
-                )}
+                { currentUser?.role === "admin" && <StyledLink to="/addnews" title="Add news" fsize={20} />}
             </TitleContainer>
             <Wrapper>
-                {posts?.map(({ id, title, desc, img }: any) => (
+                {fetchedPosts?.data?.map(({ id, title, desc, img }: IPostProps) => (
                     <CardWrapper key={id} whileHover={{ scale: 1.1 }}>
-                        <CardComponent id={id} title={title} desc={desc} img={`public/upload/${img}`} />
+                        <CardComponent id={id} title={title} desc={desc} img={`http://localhost:3000/api/images/${img}`} />
                     </CardWrapper>
                 ))}
             </Wrapper>
+            {fetchedPosts && (
+            <ButtonWrapper>
+            {currentPage > 1 && <StyledButton onClick={handlePreviousPage} title="Previous" />}
+            {fetchedPosts?.data?.length < POST_LIMIT_PER_PAGE || <StyledButton onClick={handleNextPage} title="Next" />}
+            </ButtonWrapper>
+            )}
         </Section>
     );
 };

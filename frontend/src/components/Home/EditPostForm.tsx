@@ -1,9 +1,21 @@
-import { useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
-import axios from 'axios';
 import StyledButton from '../../layout/StyledButton';
+import { usePosts } from '../../hooks/usePosts';
+import { mainAxios } from '../../api/axiosCreate';
+
+interface IProps {
+    title: string 
+    setTitle: Dispatch<SetStateAction<string>>
+    value: string
+    setValue: Dispatch<SetStateAction<string>>
+    userId: string
+    postId: string | undefined
+    setShowEditForm: Dispatch<SetStateAction<boolean>>
+    refetch: () => {}
+}
 
 const FormContainer = styled.div`
     width: 70%;
@@ -40,29 +52,34 @@ const StyledUploadLabel = styled.label`
     width:fit-content;
 `;
 
-const EditPostForm = ({ title, setTitle, value, setValue, image, userId, postId, setShowEditForm, refetch }: any) => {
-    const [file, setFile] = useState(null);
+const EditPostForm = ({ title, setTitle, value, setValue, userId, postId, setShowEditForm, refetch }: IProps) => {
+    const [file, setFile] = useState<File | null>(null); 
 
-    const handleImageChange = (e:any) => {
-        const selectedImage = e.target.files[0];
-        setFile(selectedImage);
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const selectedImage = e.target.files?.[0];
+        if (selectedImage) {
+            setFile(selectedImage);
+        }
     };
+    const {updatePostMutation} = usePosts(postId)
 
     const uploadImage = async () => {
         try {
-            const formData:any = new FormData();
-            formData.append('file', file);
-            const res = await axios.post('http://localhost:3000/api/upload', formData);
+            const formData:FormData  = new FormData();
+            if (file !== null) {
+                formData.append('file', file);
+              }
+            const res = await mainAxios.post('/upload', formData);
             return res.data;
         } catch (error) {
             console.error('Error uploading image:', error);
         }
     };
 
-    const handleSubmit = async (e:any) => {
+    const handleSubmit = async (e:SubmitEvent) => {
       e.preventDefault();
       try {
-          let imgUrl = image; 
+          let imgUrl; 
   
 
           if (file) {
@@ -70,21 +87,19 @@ const EditPostForm = ({ title, setTitle, value, setValue, image, userId, postId,
           }
   
 
-
           if(imgUrl) {
-
-            await axios.put(`http://localhost:3000/api/posts/${postId}`, {
+            updatePostMutation.mutate({
                 title,
                 desc: value,
                 img: imgUrl,
                 uid: userId
-            });
+            })
           } else {
-            await axios.put(`http://localhost:3000/api/posts/${postId}`, {
-              title,
+            updatePostMutation.mutate({
+                title,
               desc: value,
               uid: userId
-          });
+            })
           }
   
           setShowEditForm(false);

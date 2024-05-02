@@ -105,7 +105,7 @@ const CommentsContainer = styled.div`
 const SingleGame = () => {
     const [value, setValue] = useState('');
     const [title, setTitle] = useState('');
-    const [editingReviewId, setEditingReviewId] = useState(null);
+    const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
     const [showEditForm, setShowEditForm] = useState(false);
     const { addReview } = useReview();
     const { currentUser } = useContext(AuthContext);
@@ -133,7 +133,7 @@ const SingleGame = () => {
         fetchData();
     }, [id, refetchSingleGame]);
 
-    const handleSubmit = async (event: any) => {
+    const handleSubmit = async (event: SubmitEvent) => {
         event.preventDefault();
 
         addReview.mutate(
@@ -164,7 +164,7 @@ const SingleGame = () => {
         )
     };
 
-    const handleDeleteReview = async (reviewId: any) => {
+    const handleDeleteReview = async (reviewId: number) => {
         deleteReviewMutation.mutate(reviewId, {
             onSuccess: () => {
                 console.log("Usunieto")
@@ -184,7 +184,7 @@ refetchReviews()
         });
     };
 
-    const handleEditButtonClick = (reviewId: any) => {
+    const handleEditButtonClick = (reviewId: number) => {
         setEditingReviewId(reviewId);
         setShowEditForm(true);
     };

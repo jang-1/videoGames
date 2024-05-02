@@ -1,15 +1,11 @@
-// CommentCard.js
 
-import React, { useContext } from 'react';
-import { format } from 'date-fns';
+import { useContext } from 'react';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
 import { Typography } from '@mui/material';
 import User from "../../assets/user.png";
 import StyledButton from '../../layout/StyledButton';
 import { AuthContext } from '../../context/authContext';
-import { pl } from 'date-fns/locale/pl';
-import { getText } from '../../lib/getText';
 import { formatDateTime } from '../../lib/formatDateTime';
 import DOMPurify from "dompurify";
 
@@ -57,8 +53,6 @@ const Img = styled.img`
 
 const CommentCard = ({ data, onEdit, onDelete }:any) => {
     const { currentUser }: any = useContext(AuthContext);
-
-    console.log(data)
 
     return (
         <StyledPaper elevation={12} sx={{ width: "100%" }}>

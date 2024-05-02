@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {  NavLink,  } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/authContext';
@@ -74,6 +74,17 @@ const ListItem = styled(NavLink)<NavLinkProps>`
   }
 `;
 
+const LoginButton = styled(NavLink)`
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: all ease .2s;
+
+
+`;
+
 
 const Navbar = () => {
     const { currentUser, handleLogout }: any = useContext(AuthContext);
@@ -133,9 +144,9 @@ const Navbar = () => {
             </List>
           </Links>
           {!currentUser ? (
-            <ListItem to="/login">
+            <LoginButton to="/login">
               <ButtonComponent title="Sign in" />
-            </ListItem>
+            </LoginButton>
           ) : (
             <ButtonComponent onClick={() => handleLogout()} title="Logout" />
           )}

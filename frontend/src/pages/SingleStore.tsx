@@ -1,7 +1,7 @@
 import { Breadcrumbs, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
-import axios, { API_KEY } from '../api/axiosCreate'
+import  { API_KEY, rawgAxios } from '../api/axiosCreate'
 import styled from 'styled-components'
 import { useEffect, useRef } from 'react'
 import RawgLink from '../layout/RawgLink'
@@ -67,7 +67,7 @@ const SingleStore = () => {
     const { data: fetchedGames, refetch: refetchGames } = useQuery({
         queryKey: ['gamesStore'],
         queryFn: () => {
-          return axios.get(`/games?${API_KEY}&store=${id}`);
+          return rawgAxios.get(`/games?${API_KEY}&store=${id}`);
         },
       });
 

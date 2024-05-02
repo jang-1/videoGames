@@ -52,15 +52,34 @@ export const AuthContextProvider: React.FC<PropsWithChildren<{}>> = ({ children 
     });
   };
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     localStorage.clear();
-  //   }, 600000); // 10 minutes in milliseconds
+  const resetLogoutTimer = () => {
+    clearTimeout(logoutTimer);
+    logoutTimer = setTimeout(() => {
+      handleLogout();
+    }, 600000); // 10 minutes in milliseconds
+  };
 
-  //   return () => {
-  //     clearTimeout(timeoutId);
-  //   };
-  // }, []);
+  let logoutTimer: number;
+
+  useEffect(() => {
+    resetLogoutTimer();
+
+    const events = ["mousemove", "keydown", "scroll"];
+    const resetTimer = () => {
+      resetLogoutTimer();
+    };
+
+    events.forEach(event => {
+      window.addEventListener(event, resetTimer);
+    });
+
+    return () => {
+      clearTimeout(logoutTimer);
+      events.forEach(event => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));

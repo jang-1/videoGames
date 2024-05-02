@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import axios, { API_KEY } from '../api/axiosCreate';
+import { API_KEY, rawgAxios } from '../api/axiosCreate';
 
 
 
@@ -7,7 +7,7 @@ export const useGames = (id?: string, currentPage?:any, selectedGenre?: any) => 
 
     const { data: genresList } = useQuery({
         queryKey: ['genres'],
-        queryFn: () => axios.get(`/genres?${API_KEY}`),
+        queryFn: () => rawgAxios.get(`/genres?${API_KEY}`),
     });
     const genres = genresList?.data.results;
 
@@ -15,7 +15,7 @@ export const useGames = (id?: string, currentPage?:any, selectedGenre?: any) => 
         queryKey: ['games', currentPage, selectedGenre], 
         queryFn: () => {
             const genreQuery = selectedGenre ? `&genres=${selectedGenre}` : '';
-            return axios.get(`/games?${API_KEY}&page=${currentPage}&page_size=9${genreQuery}`);
+            return rawgAxios.get(`/games?${API_KEY}&page=${currentPage}&page_size=9${genreQuery}`);
         },
     });
     const games = gameList?.data.results;
@@ -23,7 +23,7 @@ export const useGames = (id?: string, currentPage?:any, selectedGenre?: any) => 
     const { data: singleGame, refetch:refetchSingleGame } = useQuery({
         queryKey: ['game', id],
         queryFn: () => {
-            return axios.get(`/games/${id}?${API_KEY}`);
+            return rawgAxios.get(`/games/${id}?${API_KEY}`);
         },
         enabled: false,
     });

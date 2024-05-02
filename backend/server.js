@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 var cors = require('cors')
 var multer = require('multer')
 var cookieParser = require('cookie-parser')
@@ -6,7 +7,6 @@ const bodyParser = require('body-parser');
 const authRoutes = require("./routes/auth")
 const postsRoutes = require("./routes/posts")
 const reviewsRoutes = require("./routes/reviews")
-const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 3000;
@@ -30,11 +30,12 @@ app.use((req, res, next) => {
 
 app.use(cookieParser())
 
+app.use("/api/images", express.static(path.join(__dirname, 'images')))
 
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../frontend/public/upload');
+    cb(null, 'images');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
@@ -42,10 +43,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = function (req, file, cb) {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-    return cb(new Error('Only image files are allowed!'), false);
+  if(file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
+    cb(null, true);
+  } else {
+    cb(null, false)
   }
-  cb(null, true);
 };
 
 const upload = multer({ 

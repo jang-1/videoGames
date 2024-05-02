@@ -1,18 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from '../api/axiosCreate';
+import { mainAxios } from '../api/axiosCreate';
 
 export const useAuth = () => {
 
   const registerMutation = useMutation({
-    mutationFn: (formData) => axios.post('http://localhost:3000/api/auth/register', formData, {withCredentials:true})
+    mutationFn: (formData) => mainAxios.post('/auth/register', formData)
   });
 
   const loginMutation = useMutation({
-    mutationFn: (formData) => axios.post('http://localhost:3000/api/auth/login', formData, {withCredentials:true})
+    mutationFn: (formData) => mainAxios.post('/auth/login', formData)
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => axios.post('http://localhost:3000/api/auth/logout')
+    mutationFn: () => mainAxios.post('/auth/logout')
   });
 
 

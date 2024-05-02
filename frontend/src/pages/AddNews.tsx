@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import axios from 'axios';
+import { mainAxios } from '../api/axiosCreate';
 import  {useContext, useState} from "react"
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -83,8 +83,8 @@ export default function AddNews() {
   const upload = async () => {
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post('http://localhost:3000/api/upload', formData)
+      formData.append("file", file); 
+      const res = await mainAxios.post('/upload', formData);
       return res.data;
     } catch (err) {
       console.log(err);
@@ -101,6 +101,7 @@ export default function AddNews() {
     }
 
     const imgUrl = await upload();
+
 
     try {
       addPost.mutate({
