@@ -3,11 +3,12 @@ import { API_KEY, rawgAxios } from '../api/axiosCreate';
 
 
 
-export const useStores = (id?: string, currentPage?:any) => {
+export const useStores = (id?: string, currentPage?:number) => {
 
     const { data: storeList, refetch, isLoading } = useQuery({
         queryKey: ['stores', currentPage],
         queryFn: () => rawgAxios.get(`/stores?${API_KEY}&page=${currentPage}&page_size=9`),
+        enabled:!id
     });
 
     const stores = storeList?.data?.results;

@@ -65,7 +65,7 @@ const ListItem = styled(NavLink)<NavLinkProps>`
   border-radius: 5px;
   transition: all ease .2s;
 
-  &.${(props:any) => props.activeClassName} {
+  &.${(props:{activeClassName:string}) => props.activeClassName} {
     background-color: #870252; 
   }
 
@@ -87,7 +87,7 @@ const LoginButton = styled(NavLink)`
 
 
 const Navbar = () => {
-    const { currentUser, handleLogout }: any = useContext(AuthContext);
+    const { currentUser, handleLogout } = useContext(AuthContext);
     const [scrolled, setScrolled] = useState(false);
   
     useEffect(() => {

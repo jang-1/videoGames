@@ -123,7 +123,6 @@ const StyledLink = styled(Link)`
     const {
         register,
         handleSubmit,
-        formState: { errors },
       } = useForm<FormData>()
 
 

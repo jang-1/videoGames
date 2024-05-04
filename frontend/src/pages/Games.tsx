@@ -55,7 +55,7 @@ const ButtonWrapper = styled.div`
 
 const Games = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedGenre, setSelectedGenre] = useState(null);
+    const [selectedGenre, setSelectedGenre] = useState(undefined);
 
     const {games, genres, isLoading, refetch} = useGames(undefined, currentPage, selectedGenre)
 

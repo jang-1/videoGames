@@ -7,7 +7,7 @@ import StyledLink from '../../layout/StyledLink';
 interface ICardProps {
     id: number
     name: string
-    games_count:string
+    games_count: number
     image: string
 }
 

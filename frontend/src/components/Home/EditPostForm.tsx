@@ -11,7 +11,7 @@ interface IProps {
     setTitle: Dispatch<SetStateAction<string>>
     value: string
     setValue: Dispatch<SetStateAction<string>>
-    userId: string
+    userId: number
     postId: string | undefined
     setShowEditForm: Dispatch<SetStateAction<boolean>>
     refetch: () => {}
@@ -96,7 +96,7 @@ const EditPostForm = ({ title, setTitle, value, setValue, userId, postId, setSho
             })
           } else {
             updatePostMutation.mutate({
-                title,
+              title,
               desc: value,
               uid: userId
             })

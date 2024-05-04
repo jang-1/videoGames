@@ -6,26 +6,11 @@ const addReview = (req, res) => {
   const { userId, gameId, review, title } = req.body;
 
   try {
-      const getUserInfoSql = 'SELECT * FROM users WHERE id = ?';
-      db.query(getUserInfoSql, [userId], (getUserInfoErr, userInfoResult) => {
-          if (getUserInfoErr) {
-              console.error('Błąd podczas pobierania informacji o użytkowniku: ', getUserInfoErr);
-              res.status(500).json({ error: 'Wystąpił błąd podczas pobierania informacji o użytkowniku' });
-              return;
-          }
-
-          if (userInfoResult.length === 0) {
-              res.status(404).json({ message: 'Nie znaleziono użytkownika o podanym ID' });
-              return;
-          }
-
-          const userInfo = userInfoResult[0];
-          
           // Pobierz aktualną datę i czas
           const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-          const insertReviewSql = 'INSERT INTO reviews (user_id, game_id, review_text, title, user_name, user_email, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)';
-          db.query(insertReviewSql, [userId, gameId, review, title, userInfo.username, userInfo.email, currentDate], (insertReviewErr, insertReviewResult) => {
+          const insertReviewSql = 'INSERT INTO reviews (user_id, game_id, review_text, title, createdAt) VALUES (?, ?, ?, ?, ?)';
+          db.query(insertReviewSql, [userId, gameId, review, title, currentDate], (insertReviewErr, insertReviewResult) => {
               if (insertReviewErr) {
                   console.error('Błąd podczas zapisywania recenzji do bazy danych: ', insertReviewErr);
                   res.status(500).json({ error: 'Wystąpił błąd podczas zapisywania recenzji' });
@@ -34,7 +19,7 @@ const addReview = (req, res) => {
               console.log('Recenzja została zapisana do bazy danych');
               res.status(200).json({ message: 'Recenzja została dodana pomyślnie' });
           });
-      });
+
   } catch (error) {
       console.error('Błąd podczas dodawania recenzji: ', error);
       res.status(500).json({ error: 'Wystąpił błąd podczas dodawania recenzji' });
@@ -46,7 +31,8 @@ const getReviews = (req, res) => {
 const gameId = req.params.gameId;
 
   // Zapytanie SQL do pobrania recenzji dla określonej gry
-  const sql = 'SELECT * FROM reviews WHERE game_id = ?';
+//   const sql = 'SELECT * FROM reviews WHERE game_id = ?';
+  const sql = 'SELECT `username`, `email` ,`title`, `review_text`, `createdAt`, `updatedAt` ,`user_id` FROM users u JOIN reviews r ON u.id = r.user_id WHERE game_id = ?';
   db.query(sql, [gameId], (err, results) => {
     if (err) {
       console.error('Błąd podczas pobierania recenzji: ', err);

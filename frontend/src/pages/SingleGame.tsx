@@ -302,7 +302,7 @@ refetchReviews()
         <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
             Reviews
         </Typography>
-        {reviews?.map((r: any) =>
+        {reviews?.map((r) =>
             editingReviewId === r.id && showEditForm ? (
                 <EditReviewForm
                     key={r.id}

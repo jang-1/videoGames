@@ -1,6 +1,12 @@
 import React, { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
+export type Inputs = {
+  name: string
+  email: string
+  password: string
+}
+
 export interface IUser {
   email: string;
   id: number;
@@ -10,7 +16,7 @@ export interface IUser {
 
 interface IAuthContext {
   currentUser: IUser | null;
-  handleLogin: (inputs: any, setError: React.Dispatch<React.SetStateAction<string>>) => void;
+  handleLogin: (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string>>) => void;
   handleLogout: () => void;
 }
 
@@ -27,7 +33,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren<{}>> = ({ children 
 
   const { login, logout } = useAuth();
 
-  const handleLogin = (inputs: any, setError: React.Dispatch<React.SetStateAction<string>>) => {
+  const handleLogin = (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string>>) => {
     login.mutate(inputs, {
       onSuccess: (data) => {
         console.log(data);
@@ -42,7 +48,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren<{}>> = ({ children 
   };
 
   const handleLogout = () => {
-    logout.mutate({} as any, {
+    logout.mutate((undefined), {
       onSuccess: () => {
         setCurrentUser(null);
       },

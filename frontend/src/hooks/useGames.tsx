@@ -3,7 +3,7 @@ import { API_KEY, rawgAxios } from '../api/axiosCreate';
 
 
 
-export const useGames = (id?: string, currentPage?:any, selectedGenre?: any) => {
+export const useGames = (id?: string, currentPage?:number, selectedGenre?: string) => {
 
     const { data: genresList } = useQuery({
         queryKey: ['genres'],
@@ -17,6 +17,7 @@ export const useGames = (id?: string, currentPage?:any, selectedGenre?: any) => 
             const genreQuery = selectedGenre ? `&genres=${selectedGenre}` : '';
             return rawgAxios.get(`/games?${API_KEY}&page=${currentPage}&page_size=9${genreQuery}`);
         },
+        enabled: !id
     });
     const games = gameList?.data.results;
 

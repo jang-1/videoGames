@@ -6,7 +6,7 @@ import { pink } from '@mui/material/colors';
 interface IButton {
     title?: string
     type?: ButtonHTMLAttributes<HTMLButtonElement>["type"]
-    onClick?: (e?:any) => void; 
+    onClick?: (React.MouseEventHandler<HTMLButtonElement> & ((e?: EventTarget) => void)) | undefined
     sx?: SxProps<Theme>
     fsize?: number
     isActive?: boolean

@@ -3,13 +3,14 @@ import { API_KEY, rawgAxios } from '../api/axiosCreate';
 
 
 
-export const useCreators = (id?: string, currentPage?:any, currentCreatorPage?: any) => {
+export const useCreators = (id?: string, currentPage?:number, currentCreatorPage?: number) => {
 
     const { data: gameDevsList, refetch, isLoading } = useQuery({
         queryKey: ['gameDevs', currentPage], 
         queryFn: () => {
             return rawgAxios.get(`/developers?${API_KEY}&page=${currentPage}&page_size=9`);
         },
+        enabled: !id
     });
     console.log(gameDevsList)
     const gameDevs = gameDevsList?.data.results;
@@ -18,6 +19,7 @@ export const useCreators = (id?: string, currentPage?:any, currentCreatorPage?: 
     const { data:gameCreatorsList, refetch:refetchCreators, isLoading:isLoadingCreators } = useQuery({
       queryKey: ['gameCreators', currentCreatorPage],
       queryFn: () => rawgAxios.get(`/creators?${API_KEY}&page=${currentCreatorPage}&page_size=9`),
+      enabled: !id
     })
   
     const gameCreators = gameCreatorsList?.data?.results

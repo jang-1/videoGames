@@ -2,13 +2,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { mainAxios } from '../api/axiosCreate';
 import { useNavigate } from 'react-router-dom';
 
-export const usePosts = (id?: string, currentPage?:any) => {
+type FormData = {
+  title: string
+  desc: string
+  img?: string
+  uid?: number
+}
+
+export const usePosts = (id?: string, currentPage?:number) => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate()
 
   const addPostMutation = useMutation({
-    mutationFn: (formData: any) => mainAxios.post('/posts', formData),
+    mutationFn: (formData: FormData) => mainAxios.post('/posts', formData),
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['posts'] });
     },
@@ -17,14 +24,14 @@ export const usePosts = (id?: string, currentPage?:any) => {
   
   
 
-  const fetchPosts = async (page: number) => {
+  const fetchPosts = async (page?: number) => {
     return mainAxios.get('/posts', { params: { page } });
 };
 
 const { data: fetchedPosts, refetch: refetchPosts } = useQuery({
   queryKey: ['posts', currentPage], 
   queryFn: () => fetchPosts(currentPage), 
-  enabled: true
+  enabled: !id
 });
   
   const { data: singlePost, refetch } = useQuery({
@@ -36,7 +43,7 @@ const { data: fetchedPosts, refetch: refetchPosts } = useQuery({
   });
   
   const updatePostMutation = useMutation({
-    mutationFn: (formData: any) => mainAxios.put(`/posts/${id}`, formData),
+    mutationFn: (formData: FormData) => mainAxios.put(`/posts/${id}`, formData),
     onSuccess: async () => {
 
       queryClient.refetchQueries({ queryKey: ['posts'] });

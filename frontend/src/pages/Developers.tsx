@@ -8,6 +8,17 @@ import { motion } from 'framer-motion'
 import RawgLink from '../layout/RawgLink'
 import { useCreators } from '../hooks/useCreators'
 
+type GameDevs = {
+  id:number
+  name:string
+  games_count:number; 
+  image_background: string 
+}
+
+type GameCreators = Omit<GameDevs, "image_background"> & {
+  image:string
+}
+
 const Section = styled.section`
     scroll-snap-align: center;
     display: flex;
@@ -107,7 +118,7 @@ return (
                     ))
                   ): (
                   <>
-                    {gameDevs?.map(({ id, name, games_count, image_background }:any) => (
+                    {gameDevs?.map(({ id, name, games_count, image_background }:GameDevs) => (
                       <CardWrapper
                       key={id}
                       variants={fadeInVariants}
@@ -141,7 +152,7 @@ return (
                     ))
                   ): (
                   <> 
-                    {gameCreators?.map(({id, name, games_count, image}:any) => (
+                    {gameCreators?.map(({id, name, games_count, image}:GameCreators) => (
                         <CardWrapper
                             key={id}
                             variants={fadeInVariants}

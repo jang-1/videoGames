@@ -52,7 +52,7 @@ const Img = styled.img`
 
 
 const CommentCard = ({ data, onEdit, onDelete }:any) => {
-    const { currentUser }: any = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
 
     return (
         <StyledPaper elevation={12} sx={{ width: "100%" }}>
