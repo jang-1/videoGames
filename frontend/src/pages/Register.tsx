@@ -27,13 +27,19 @@ const LoginSection = styled.header`
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    color: white;
 `
 
 const Container = styled.header`
     height: 100vh;
-    width: 1400px;
+    width: 100%;
+    max-width: 1400px;
     display: flex;
     justify-content: space-between;
+    @media only screen and (max-width: 768px) {
+      flex-direction: column;
+      height: 100%;
+  }
 `
 
 const Left = styled.div`
@@ -61,6 +67,7 @@ const Right = styled.div`
   @media only screen and (max-width: 768px) {
     flex: 1;
     width: 100%;
+    margin-bottom: 50px;
   }
 `;
 
@@ -75,10 +82,13 @@ const Img = styled.img`
   margin: auto;
   animation: animate 2s infinite ease alternate;
 
+
   @media only screen and (max-width: 768px) {
-    width: 300px;
-    height: 300px;
-  }
+  width: 300px;
+  height: 300px;
+  left: 0%;
+  top:-65%;
+}
 
   @keyframes animate {
     to {
@@ -97,7 +107,10 @@ const Form = styled.form`
   border-radius: 10px;
   gap:30px;
   padding: 40px;
-  `;
+  @media only screen and (max-width: 768px) {
+    width: 95%;
+  }
+`;
 
 
 

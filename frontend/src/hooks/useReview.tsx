@@ -43,12 +43,12 @@ export const useReview = (id?: string) => {
       },
       enabled: true,
   });
-  const reviews: Review[] | [] = fetchedReviews?.data;
-
-  console.log(reviews)
-
-
-
+  let reviews: Review[] | [] = fetchedReviews?.data;
+  reviews =  reviews?.sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return dateB - dateA;
+  });
 
 
   return {

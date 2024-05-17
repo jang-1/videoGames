@@ -30,6 +30,11 @@ const Container = styled.div`
     margin: 0px auto 150px;
     row-gap: 30px;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+       width:100%;
+       margin: 0px auto 50px;
+  }
 `;
 
 const Right = styled.div`
@@ -45,6 +50,10 @@ const StyledImage = styled.img`
     object-fit: contain;
     width: 50vw;
     border-radius: 30px;
+
+    @media (max-width: 768px) {
+       width: 95vw;
+  }
 `;
 
 const SectionWrapper = styled.div`
@@ -54,6 +63,12 @@ const SectionWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+     @media (max-width: 768px) {
+       width:100%;
+       padding: 0 50px;
+
+  }
 `;
 
 const TextWrapper = styled.div`

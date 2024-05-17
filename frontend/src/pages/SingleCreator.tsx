@@ -19,6 +19,13 @@ const Container = styled.div`
     margin: 0px auto 150px;
     row-gap: 30px;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+       width:100%;
+       padding: 0 20px;
+
+       margin: 0px auto 50px;
+  }
  
 `
 
@@ -30,12 +37,20 @@ const Right = styled.div`
     gap:20px;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 768px) {
+       width:100%
+  }
 `
 
 const StyledImage = styled.img`
     object-fit: contain;
     width: 20vw;
     border-radius: 30px;
+
+    @media (max-width: 768px) {
+       width:50vw
+  }
 `
 
 const SectionWrapper = styled.div`
@@ -45,6 +60,7 @@ const SectionWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
 `
 
 const TextWrapper = styled.div`
@@ -53,6 +69,10 @@ const TextWrapper = styled.div`
     align-items: center;
     row-gap:20px;
     column-gap: 30px;
+
+    @media (max-width: 768px) {
+       flex-wrap: wrap;
+  }
 `
 
 const SingleCreator = () => {
@@ -127,8 +147,8 @@ const SingleCreator = () => {
                     ))}
                 </TextWrapper>
             </Right>
-        </SectionWrapper>
         <RawgLink/>
+        </SectionWrapper>
     </Container>
   )
 }

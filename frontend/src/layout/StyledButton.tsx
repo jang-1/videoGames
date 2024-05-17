@@ -11,6 +11,7 @@ interface IButton {
     fsize?: number
     isActive?: boolean
     variant?: string
+    disabled?: boolean
 }
 
 
@@ -25,9 +26,9 @@ const ColorButton = styled(Button)<ButtonProps & IButton>(({ theme, sx, fsize, i
 }));
 
 
-const StyledButton:React.FC<IButton> = ({title, type, onClick, sx, fsize, isActive, variant}) => {
+const StyledButton:React.FC<IButton> = ({title, type, onClick, sx, fsize, isActive, variant, disabled}) => {
  return (
-   <ColorButton variant={!variant ? "contained" : "outlined"} color="secondary" type={type} onClick={onClick} sx={sx} fsize={fsize} isActive={isActive}>
+   <ColorButton variant={!variant ? "contained" : "outlined"} disabled={disabled} color="secondary" type={type} onClick={onClick} sx={sx} fsize={fsize} isActive={isActive}>
       {title}
    </ColorButton>
  )

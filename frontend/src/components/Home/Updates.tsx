@@ -5,8 +5,8 @@ import CardComponent from './layout/Card';
 import { usePosts } from '../../hooks/usePosts';
 import StyledLink from '../../layout/StyledLink';
 import { motion } from 'framer-motion';
-import StyledButton from '../../layout/StyledButton';
 import { AuthContext } from '../../context/authContext';
+import Pagination from '../../layout/Pagination';
 
 interface IPostProps {
     id:number 
@@ -49,13 +49,6 @@ const TitleContainer = styled.div`
     gap: 20px;
 `;
 
-const ButtonWrapper = styled.div`
-    width: 100%;
-    align-self: flex-end;
-    display: flex;
-    justify-content: space-evenly;
-    margin: 50px 0;
-`;
 
 const Updates: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -93,10 +86,7 @@ const Updates: React.FC = () => {
                 ))}
             </Wrapper>
             {fetchedPosts && (
-            <ButtonWrapper>
-            {currentPage > 1 && <StyledButton onClick={handlePreviousPage} title="Previous" />}
-            {fetchedPosts?.data?.length < POST_LIMIT_PER_PAGE || <StyledButton onClick={handleNextPage} title="Next" />}
-            </ButtonWrapper>
+            <Pagination currentPage={currentPage} hasMorePages={fetchedPosts?.data?.length > POST_LIMIT_PER_PAGE} nextPage={handleNextPage} prevPage={handlePreviousPage}/>
             )}
         </Section>
     );

@@ -15,6 +15,10 @@ const Container = styled.footer`
     align-items: center;
     justify-content: center;
     margin-top: 5vh;
+
+    @media (max-width: 768px) {
+        height:fit-content
+    }
 `
 
 const Wrapper = styled.div`
@@ -22,12 +26,22 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap:30px
+    }
 `
 
 const Left = styled.div`
     display: flex;
     flex-direction: column;
     width: 50%;
+
+    @media (max-width: 768px) {
+        flex-direction:row;
+        width: 100%;
+    }
 `
 
 const Right = styled.div`
@@ -36,6 +50,10 @@ const Right = styled.div`
     align-items: center;
     justify-content: space-between;
     height: 200px;
+
+    @media (max-width: 768px) {
+        width:100%
+    }
 `
 
 const Img = styled.img`
@@ -117,7 +135,7 @@ const Footer = () => {
                 <Img src={Logo} alt="logo" />
                 <Info>
                     <Line src={LineImg}></Line>
-                    <Subtitle>Newsy, rankingi, twórcy i wiele więcej!</Subtitle>
+                    <Subtitle>News, rankings, creators and much more!</Subtitle>
                 </Info>
             </Left>
             <Right>

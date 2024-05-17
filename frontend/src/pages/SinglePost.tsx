@@ -25,6 +25,12 @@ const Container = styled.div`
     margin: 0px auto 150px;
     row-gap: 30px;
     flex-direction: column;
+
+    @media only screen and (max-width: 768px) {
+        width: 100%;
+        padding: 20px;
+        margin: 0px auto 50px;
+  }
 `;
 
 const Right = styled.div`
@@ -40,6 +46,10 @@ const StyledImage = styled.img`
     object-fit: contain;
     width: 50vw;
     border-radius: 30px;
+
+    @media only screen and (max-width: 768px) {
+    width: 95vw;
+  }
 `;
 
 const SectionWrapper = styled.div`
@@ -64,13 +74,18 @@ const BoxWrapper = styled.div`
     align-items: center;
     justify-content: space-between;
     width: 50vw;
+
+    @media only screen and (max-width: 768px) {
+        width: 100%;
+  }
 `;
 
 const UserWrapper = styled.div`
-    /* display: flex; */
+display: flex;
     gap: 10px;
     justify-content: center;
     align-items: center;
+
 `;
 
 
@@ -138,18 +153,18 @@ const SinglePost = () => {
             {!showEditForm &&<SectionWrapper>
                 <StyledImage src={`http://localhost:3000/api/images/${post?.img}`} />
                 <BoxWrapper>
-                <UserWrapper>
-                <Typography fontWeight="bold" color="#da4ea2">
-                                Posted by: 
-                    </Typography>
-                    <Typography fontSize={16} fontWeight={"bold"}>{post?.username}</Typography>
-                </UserWrapper>
-                <DateContainer>
+                    <UserWrapper>
                     <Typography fontWeight="bold" color="#da4ea2">
-                                Created at:
-                    </Typography>
-                    <TextWrapper>{formatDateTime(post?.created_at)}</TextWrapper>
-                </DateContainer>
+                                    Posted by: 
+                        </Typography>
+                        <Typography fontSize={16} fontWeight={"bold"}>{post?.username}</Typography>
+                    </UserWrapper>
+                    <DateContainer>
+                        <Typography fontWeight="bold" color="#da4ea2">
+                                    Created at:
+                        </Typography>
+                        <TextWrapper>{formatDateTime(post?.created_at)}</TextWrapper>
+                    </DateContainer>
                 </BoxWrapper>
                 <Typography sx={{ fontSize: '40px' }} color="#da4ea2">
                     {post?.title}
@@ -167,7 +182,7 @@ const SinglePost = () => {
             {isAdmin && !showEditForm && (
             <StyledButton onClick={handleEdit} title='Edit Post' />
         )}
-        <StyledButton onClick={() => handleDelete()} title='Delete Post' />
+            {isAdmin && <StyledButton onClick={() => handleDelete()} title='Delete Post' />}
             {showEditForm && (
             <EditPostForm
                 title={title}

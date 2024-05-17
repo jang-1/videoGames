@@ -1,11 +1,11 @@
 import { Typography, Skeleton } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
-import StyledButton from '../layout/StyledButton';
 import { motion } from 'framer-motion';
 import StoreCard from '../components/Stores/StoreCard';
 import RawgLink from '../layout/RawgLink';
 import { useStores } from '../hooks/useStores';
+import Pagination from '../layout/Pagination';
 
 const Section = styled.section`
     scroll-snap-align: center;
@@ -17,27 +17,24 @@ const Section = styled.section`
 `;
 
 const Wrapper = styled.div`
-    width: 100%;
+    width: 70%;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 30px;
+
+    @media (max-width: 768px) {
+        justify-content: center;
+  }
 `;
 
 const CardWrapper = styled(motion.div)`
-    width: 30%;
+    width: 345px;
     display: flex;
     justify-content: center;
     align-items: center;
 `;
 
-const ButtonWrapper = styled.div`
-    width: 100%;
-    align-self: flex-end;
-    display: flex;
-    justify-content: space-evenly;
-    margin: 50px 0;
-`;
 
 const Stores = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -82,14 +79,7 @@ const Stores = () => {
                     ))
                 )}
             </Wrapper>
-            <ButtonWrapper>
-                {currentPage > 1 && (
-                  <StyledButton onClick={prevPage} title="Previous" />
-                )}
-                {stores && stores.length === 9 && (
-                <StyledButton onClick={nextPage} title="Next" />
-                )}
-            </ButtonWrapper>
+            <Pagination currentPage={currentPage} hasMorePages={stores?.length === 9} nextPage={nextPage} prevPage={prevPage}/>
         </Section>
     );
 };

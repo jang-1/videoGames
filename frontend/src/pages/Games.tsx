@@ -1,11 +1,12 @@
-import {Skeleton, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Skeleton, Typography } from '@mui/material';
 import styled from 'styled-components';
 import CardComponent from '../components/Games/Card';
-import { useState } from 'react';
 import StyledButton from '../layout/StyledButton';
 import { motion } from 'framer-motion';
 import RawgLink from '../layout/RawgLink';
 import { useGames } from '../hooks/useGames';
+import Pagination from '../layout/Pagination';
 
 const Section = styled.section`
     scroll-snap-align: center;
@@ -20,6 +21,9 @@ const Wrapper = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    @media (max-width: 768px) {
+        justify-content: center
+  }
 `;
 
 const CardWrapper = styled(motion.div)`
@@ -34,6 +38,10 @@ const GenresWrapper = styled.div`
     display: flex;
     gap:15px;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const GamesWrapper = styled.div`
@@ -43,21 +51,42 @@ const GamesWrapper = styled.div`
     row-gap:50px;
     flex-wrap: wrap;
     min-height: 1000px;
+
+    @media (max-width: 768px) {
+        width:100%;
+        justify-content: center;
+  }
 `;
 
-const ButtonWrapper = styled.div`
+
+
+const SearchWrapper = styled.div`
     width: 90%;
-    align-self: flex-end;
     display: flex;
-    justify-content: space-evenly;
-    margin: 50px 0;
+    justify-content: center;
+    gap:10px;
+
+    @media (max-width: 768px) {
+        width:100%;
+  }
+`;
+
+const SearchInput = styled.input`
+    width: 70%;
+    padding: 10px;
+    height: 50px;
+    font-size: 16px;
+`;
+
+const SearchButton = styled(StyledButton)`
 `;
 
 const Games = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedGenre, setSelectedGenre] = useState(undefined);
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const {games, genres, isLoading, refetch} = useGames(undefined, currentPage, selectedGenre)
+    const {games, genres, isLoading, refetch} = useGames(undefined, currentPage, selectedGenre, searchTerm)
 
     const nextPage = () => {
         setCurrentPage((prevPage) => prevPage + 1);
@@ -77,6 +106,16 @@ const Games = () => {
         refetch();
     };
 
+    const handleSearchChange = (event:any) => {
+        setSearchTerm(event.target.value);
+    };
+
+
+    const handleSearchClick = () => {
+        setCurrentPage(1)
+        refetch()
+    };
+
     const hasMorePages = games?.length === 9;
 
     const fadeIn = {
@@ -93,7 +132,7 @@ const Games = () => {
             </Typography>
             <RawgLink/>
             <Wrapper>
-                <GenresWrapper>
+                <GenresWrapper>   
                     <StyledButton
                         sx={{ margin: "0 0 0 10px" }}
                         fsize={18}
@@ -113,13 +152,23 @@ const Games = () => {
                     ))}
                 </GenresWrapper>
                 <GamesWrapper>
-                {isLoading ? (
-                    skeletonArray.map((_, index) => (
-                      <CardWrapper key={index}>
-                        <Skeleton variant="rectangular" width={345} height={325} />
-                      </CardWrapper>
-                    ))
-                  ): (
+                    <SearchWrapper>
+                        
+                        <SearchInput
+                            type="text"
+                            placeholder="Search games..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            />
+                        <SearchButton onClick={handleSearchClick} title="Search" />
+                    </SearchWrapper>
+                    {isLoading ? (
+                        skeletonArray.map((_, index) => (
+                            <CardWrapper key={index}>
+                                <Skeleton variant="rectangular" width={345} height={325} />
+                            </CardWrapper>
+                        ))
+                    ): (
                         games?.map(({ id, name, released, rating, background_image }: any) => (
                             <CardWrapper
                                 key={name}
@@ -135,10 +184,7 @@ const Games = () => {
                     )}
                 </GamesWrapper>
             </Wrapper>
-            <ButtonWrapper>
-                {currentPage > 1 && <StyledButton onClick={prevPage} title="Previous" />}
-                {hasMorePages && <StyledButton onClick={nextPage} title="Next" />}
-            </ButtonWrapper>
+            <Pagination currentPage={currentPage} hasMorePages={hasMorePages} nextPage={nextPage} prevPage={prevPage}/>
         </Section>
     );
 };

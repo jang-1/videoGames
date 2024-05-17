@@ -53,7 +53,7 @@ const Img = styled.img`
 
 const CommentCard = ({ data, onEdit, onDelete }:any) => {
     const { currentUser } = useContext(AuthContext);
-
+    
     return (
         <StyledPaper elevation={12} sx={{ width: "100%" }}>
             <Container>
@@ -69,7 +69,7 @@ const CommentCard = ({ data, onEdit, onDelete }:any) => {
                     </ColumnContainer>
                     <ColumnUserContainer >
                         <Img src={User} alt="" />
-                        <Typography fontSize={16} fontWeight={"bold"}>{data.user_name}</Typography>
+                        <Typography fontSize={16} fontWeight={"bold"}>{data.username}</Typography>
                     </ColumnUserContainer>
                 </Wrapper>
                 <p
