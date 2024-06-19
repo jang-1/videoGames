@@ -16,7 +16,7 @@ export interface IUser {
 
 interface IAuthContext {
   currentUser: IUser | null;
-  handleLogin: (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string>>) => void;
+  handleLogin: (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string | null>>) => void;
   handleLogout: () => void;
 }
 
@@ -33,12 +33,12 @@ export const AuthContextProvider: React.FC<PropsWithChildren<{}>> = ({ children 
 
   const { login, logout } = useAuth();
 
-  const handleLogin = (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string>>) => {
+  const handleLogin = (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string | null>>) => {
     login.mutate(inputs, {
       onSuccess: (data) => {
         console.log(data);
         setCurrentUser(data.data);
-        setError("");
+        setError(null);
       },
       onError: (error) => {
         console.error("Login failed:", error);

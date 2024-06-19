@@ -70,7 +70,7 @@ const ImageWrapper = styled.div`
         </StyledBox>
       </CardContent>
       <CardActions sx={{backgroundColor:"#740343", borderBottomLeftRadius:"20px",borderBottomRightRadius:"20px", width:"100%", display:"flex", flex:1}}>
-        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to={`/creators/${id}`}/>
+        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Read More" to={`/creators/${id}`}/>
       </CardActions>
     </Container>
   );

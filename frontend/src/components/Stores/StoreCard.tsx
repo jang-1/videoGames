@@ -38,7 +38,7 @@ const StyledBox = styled.div`
         </StyledBox>
       </CardContent>
       <CardActions sx={{backgroundColor:"#740343"}}>
-        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to={`/stores/${id}`}/>
+        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Read More" to={`/stores/${id}`}/>
       </CardActions>
     </Card>
   );

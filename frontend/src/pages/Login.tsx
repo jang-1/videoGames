@@ -131,7 +131,8 @@ const StyledLink = styled(Link)`
   const Login: React.FC = () => {
 
     const navigate = useNavigate()
-    const [error, setError] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    console.log(error)
 
     const {
         register,
@@ -149,7 +150,7 @@ const StyledLink = styled(Link)`
             password: data.password,
         }, setError);
  
-        {!error && navigate("/")}
+        {error == null || navigate("/")}
       })
 
 

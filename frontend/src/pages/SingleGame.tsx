@@ -48,7 +48,7 @@ const Right = styled.div`
 
 const StyledImage = styled.img`
     object-fit: contain;
-    width: 50vw;
+    width: 40vw;
     border-radius: 30px;
 
     @media (max-width: 768px) {
@@ -168,6 +168,7 @@ const SingleGame = () => {
     };
 
     const handleEditReview = async (formData: any) => {
+        console.log(formData)
             editReviewMutation.mutate(formData, {onSuccess: () => {
                 setEditingReviewId(null);
                 setShowEditForm(false);
@@ -335,7 +336,7 @@ refetchReviews()
                     <CommentCard
                         data={r}
                         onEdit={() => handleEditButtonClick(r.id)}
-                        onDelete={() => handleDeleteReview(r.id)}
+                        onDelete={handleDeleteReview}
                     />
                 </motion.div>
             )

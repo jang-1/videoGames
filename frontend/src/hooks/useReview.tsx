@@ -27,7 +27,7 @@ export const useReview = (id?: string) => {
   });
 
   const editReviewMutation = useMutation({
-    mutationFn: (formData:any) => mainAxios.put(`/reviews/${formData.id}`, formData)
+    mutationFn: (formData:any) => mainAxios.put(`/reviews/${formData.reviewId}`, formData)
   });
 
   const deleteReviewMutation = useMutation({

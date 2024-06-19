@@ -1,6 +1,7 @@
 const db = require("../db");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken")
+require('dotenv').config();
 
 const register = (req, res) => {
   // Sprawdzenie istniejącego użytkownika
@@ -30,11 +31,7 @@ const register = (req, res) => {
 };
 
 const login = (req, res) => {
-  // Logika logowania
-
   // Sprawdzenie istniejącego użytkownika
-
-  console.log(req.body.email, req.body.name)
 
   const q = "SELECT * FROM users WHERE email = ? AND username = ?";
 
@@ -42,7 +39,7 @@ const login = (req, res) => {
     if(err) return res.json(err);
     if(data.length === 0) return res.status(409).json("User not found!");
 
-    //Check password
+    //Sprwadzenie hasła
 
     const isPasswordCorrect = bcrypt.compareSync(req.body.password, data[0].password)
 
@@ -50,7 +47,7 @@ const login = (req, res) => {
       return res.status(400).json("Wrong username, email or password")
     }
 
-    const token = jwt.sign({id: data[0].id}, "jwtkey");
+    const token = jwt.sign({id: data[0].id}, process.env.SECRET_KEY);
     
     const {password, ...other} = data[0]
     res.cookie("access_token", token, {

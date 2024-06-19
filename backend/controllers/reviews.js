@@ -31,8 +31,7 @@ const getReviews = (req, res) => {
 const gameId = req.params.gameId;
 
   // Zapytanie SQL do pobrania recenzji dla określonej gry
-//   const sql = 'SELECT * FROM reviews WHERE game_id = ?';
-  const sql = 'SELECT `username`, `email` ,`title`, `review_text`, `createdAt`, `updatedAt` ,`user_id` FROM users u JOIN reviews r ON u.id = r.user_id WHERE game_id = ?';
+  const sql = 'SELECT r.id as reviewId, `username`, `email` ,`title`, `review_text`, `createdAt`, `updatedAt` ,`user_id` FROM users u JOIN reviews r ON u.id = r.user_id WHERE game_id = ?';
   db.query(sql, [gameId], (err, results) => {
     if (err) {
       console.error('Błąd podczas pobierania recenzji: ', err);

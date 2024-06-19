@@ -17,8 +17,6 @@ export const useAuth = () => {
   });
 
 
-
-
   return {
     registerUser: registerMutation.mutate,
     login: loginMutation,

@@ -33,7 +33,7 @@ const EditReviewForm = ({ reviewData, onSave, onCancel }:any) => {
     return (
         <div>
             <Typography variant="h6" gutterBottom>
-                Edytuj recenzję
+                Edit
             </Typography>
             <StyledInput
                             type="text"
@@ -44,8 +44,8 @@ const EditReviewForm = ({ reviewData, onSave, onCancel }:any) => {
             <EditorContainer>
                             <ReactQuill value={content} onChange={setContent} style={{ height: '100%', border: 'none' }} />
             </EditorContainer>
-            <StyledButton  title='Zapisz zmiany' onClick={handleSave} sx={{ margin: '0 1rem' }}/>
-            <StyledButton  title='Anuluj'  onClick={onCancel}/>
+            <StyledButton  title='Save' onClick={handleSave} sx={{ margin: '0 1rem' }}/>
+            <StyledButton  title='Cancel'  onClick={onCancel}/>
 
         </div>
     );

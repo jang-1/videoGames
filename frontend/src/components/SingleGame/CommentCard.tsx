@@ -53,6 +53,8 @@ const Img = styled.img`
 
 const CommentCard = ({ data, onEdit, onDelete }:any) => {
     const { currentUser } = useContext(AuthContext);
+
+    console.log(data.reviewId)
     
     return (
         <StyledPaper elevation={12} sx={{ width: "100%" }}>
@@ -61,10 +63,10 @@ const CommentCard = ({ data, onEdit, onDelete }:any) => {
                     <ColumnContainer>
                         <Typography sx={{display:"flex", alignSelf:"flex-start"}} fontSize={24} fontWeight={"bold"}>{data.title}</Typography>
                         <Typography fontSize={12} fontWeight={"bold"}>
-                            Dodany: {formatDateTime(data.createdAt)}
+                            Created at: {formatDateTime(data.createdAt)}
                         </Typography>
                         {data.updatedAt && <Typography fontSize={12} fontWeight={"bold"}>
-                            Edytowany: {formatDateTime(data.updatedAt)}
+                            Updated at: {formatDateTime(data.updatedAt)}
                         </Typography>}
                     </ColumnContainer>
                     <ColumnUserContainer >
@@ -79,7 +81,7 @@ const CommentCard = ({ data, onEdit, onDelete }:any) => {
                         ></p>
                 {currentUser?.id == data.user_id && <div style={{display:"flex", gap:10,}}>
                     <StyledButton variant='outlined' fsize={10} title="Edytuj" onClick={() => onEdit(data)}/>
-                    <StyledButton variant='outlined'fsize={10} title="Usuń" onClick={() => onDelete(data.id)}/>
+                    <StyledButton variant='outlined'fsize={10} title="Usuń" onClick={() => onDelete(data.reviewId)}/>
                 </div>}
             </Container>
         </StyledPaper>

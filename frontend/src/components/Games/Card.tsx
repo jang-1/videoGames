@@ -43,7 +43,7 @@ const StyledBox = styled.div`
         </StyledBox>
       </CardContent>
       <CardActions sx={{backgroundColor:"#740343"}}>
-        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Czytaj więcej" to={`/games/${id}`}/>
+        <StyledLink sx={{padding:"10px 15px"}} fsize={16} title="Read more" to={`/games/${id}`}/>
       </CardActions>
     </Card>
   );
