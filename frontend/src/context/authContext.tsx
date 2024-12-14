@@ -1,6 +1,7 @@
 import React, { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
+
 export type Inputs = {
   name: string
   email: string
@@ -16,33 +17,36 @@ export interface IUser {
 
 interface IAuthContext {
   currentUser: IUser | null;
-  handleLogin: (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string | null>>) => void;
+  handleLogin: (inputs: Inputs, navigate: (path: string) => void) => void;
   handleLogout: () => void;
+  error:string | null;
 }
 
 export const AuthContext = createContext<IAuthContext>({
   currentUser: null,
   handleLogin: () => {},
-  handleLogout: () => {}
+  handleLogout: () => {},
+  error: null,
 });
 
 export const AuthContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<IUser | null>(
     JSON.parse(localStorage.getItem("user") || "null")
   );
+  const [error, setError] = useState<string | null>(null);
+
 
   const { login, logout } = useAuth();
 
-  const handleLogin = (inputs: Inputs, setError: React.Dispatch<React.SetStateAction<string | null>>) => {
-    login.mutate(inputs, {
+  const handleLogin = async (inputs: Inputs, navigate: (path: string) => void) => {
+     login.mutate(inputs, {
       onSuccess: (data) => {
-        console.log(data);
         setCurrentUser(data.data);
         setError(null);
+        navigate("/")        
       },
-      onError: (error) => {
-        console.error("Login failed:", error);
-        setError("Logowanie nie powiodło się! Sprawdź dane logowania.");
+      onError: () => {
+         setError("Login failed, enter correct data!");
       },
     });
   };
@@ -91,6 +95,6 @@ export const AuthContextProvider: React.FC<PropsWithChildren<{}>> = ({ children 
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
 
-  return <AuthContext.Provider value={{ currentUser, handleLogin, handleLogout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ currentUser, handleLogin, handleLogout, error }}>{children}</AuthContext.Provider>;
 };
 

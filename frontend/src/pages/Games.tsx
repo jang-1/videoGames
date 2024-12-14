@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Skeleton, Typography } from '@mui/material';
 import styled from 'styled-components';
-import CardComponent from '../components/Games/Card';
+import CardComponent from '../components/CardComponent/CardComponent';
 import StyledButton from '../layout/StyledButton';
 import { motion } from 'framer-motion';
 import RawgLink from '../layout/RawgLink';
@@ -65,6 +65,7 @@ const SearchWrapper = styled.div`
     display: flex;
     justify-content: center;
     gap:10px;
+   
 
     @media (max-width: 768px) {
         width:100%;
@@ -76,6 +77,7 @@ const SearchInput = styled.input`
     padding: 10px;
     height: 50px;
     font-size: 16px;
+    outline:none;
 `;
 
 const SearchButton = styled(StyledButton)`
@@ -178,7 +180,10 @@ const Games = () => {
                                 layout
                                 whileHover={{scale:1.1}}
                             >
-                                <CardComponent id={id} name={name} release={released} rating={rating} image={background_image} />
+                                <CardComponent 
+                                    id={id} name={name} release={released} rating={rating} image={background_image}
+                                    linkBasePath="games" 
+                                    />
                             </CardWrapper>
                         ))
                     )}

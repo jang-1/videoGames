@@ -76,7 +76,7 @@ const EditPostForm = ({ title, setTitle, value, setValue, userId, postId, setSho
         }
     };
 
-    const handleSubmit = async (e:SubmitEvent) => {
+    const handleSubmit = async (e:React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       try {
           let imgUrl; 

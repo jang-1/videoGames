@@ -54,8 +54,6 @@ const Img = styled.img`
 const CommentCard = ({ data, onEdit, onDelete }:any) => {
     const { currentUser } = useContext(AuthContext);
 
-    console.log(data.reviewId)
-    
     return (
         <StyledPaper elevation={12} sx={{ width: "100%" }}>
             <Container>
@@ -80,8 +78,8 @@ const CommentCard = ({ data, onEdit, onDelete }:any) => {
                         }}
                         ></p>
                 {currentUser?.id == data.user_id && <div style={{display:"flex", gap:10,}}>
-                    <StyledButton variant='outlined' fsize={10} title="Edytuj" onClick={() => onEdit(data)}/>
-                    <StyledButton variant='outlined'fsize={10} title="Usuń" onClick={() => onDelete(data.reviewId)}/>
+                    <StyledButton variant='outlined' fsize={10} title="Edit" onClick={() => onEdit(data)}/>
+                    <StyledButton variant='outlined'fsize={10} title="Delete" onClick={() => onDelete(data.reviewId)}/>
                 </div>}
             </Container>
         </StyledPaper>

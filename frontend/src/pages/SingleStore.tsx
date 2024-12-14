@@ -71,11 +71,9 @@ const SingleStore = () => {
         },
       });
 
-      console.log(fetchedGames)
       
       const filteredGames = fetchedGames?.data
 
-      console.log(filteredGames)
     useEffect(() => {
         const fetchData = async () => {
           await refetchStore();

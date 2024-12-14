@@ -150,11 +150,9 @@ function Contact() {
     })
     .then(
       () => {
-        console.log('SUCCESS!');
         setSuccess(true)
       },
-      (error) => {
-        console.log('FAILED...', error.text);
+      () => {
         setSuccess(false)
       },
     );

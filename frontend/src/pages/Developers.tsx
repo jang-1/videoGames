@@ -1,7 +1,7 @@
 import { Skeleton, Typography } from '@mui/material'
 import styled from 'styled-components'
-import CardComponent from '../components/Developers/Card'
-import CreatorsCard from '../components/Games/CreatorsCard'
+import CardComponent from '../components/CardComponent/CardComponent'
+import CreatorsCard from '../components/Creators/CreatorsCard'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import RawgLink from '../layout/RawgLink'
@@ -121,13 +121,13 @@ return (
                   <>
                     {gameDevs?.map(({ id, name, games_count, image_background }:GameDevs) => (
                       <CardWrapper
-                      key={id}
-                      variants={fadeInVariants}
-                      initial="hidden"
-                      animate="visible"
-                      whileHover={{scale:1.1}}
+                        key={id}
+                        variants={fadeInVariants}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover={{scale:1.1}}
                   >
-                      <CardComponent id={id} name={name} games_count={games_count} image={image_background} />
+                      <CardComponent id={id} name={name} games_count={games_count} image={image_background} linkBasePath="developers" />
                   </CardWrapper>
                     ))}
                   </>

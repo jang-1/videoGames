@@ -2,10 +2,10 @@ import { Typography, Skeleton } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import StoreCard from '../components/Stores/StoreCard';
 import RawgLink from '../layout/RawgLink';
 import { useStores } from '../hooks/useStores';
 import Pagination from '../layout/Pagination';
+import CardComponent from '../components/CardComponent/CardComponent';
 
 const Section = styled.section`
     scroll-snap-align: center;
@@ -74,7 +74,7 @@ const Stores = () => {
                             key={id}
                             whileHover={{scale:1.1}}
                         >
-                            <StoreCard id={id} name={name} games_count={games_count} image={image_background} />
+                            <CardComponent id={id} name={name} games_count={games_count} image={image_background} linkBasePath="stores" />
                         </CardWrapper>
                     ))
                 )}

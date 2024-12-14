@@ -67,6 +67,15 @@ const StyledUploadLabel = styled.label`
   cursor: pointer;
 `;
 
+const Title = styled.h1`
+display: flex;
+gap:20px;
+align-items: center;
+justify-content: center;
+margin-top: 50px;
+
+`
+
 
 export default function AddNews() {
   const [value, setValue] = useState("");
@@ -119,6 +128,7 @@ export default function AddNews() {
   return (
     <Container>
         <Content>
+          <Title>Add new post</Title>
           <StyledInput
             type="text"
             placeholder="Title"

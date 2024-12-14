@@ -1,12 +1,12 @@
 import React, {  useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
-import CardComponent from './layout/Card';
 import { usePosts } from '../../hooks/usePosts';
 import StyledLink from '../../layout/StyledLink';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../../context/authContext';
 import Pagination from '../../layout/Pagination';
+import CardComponent from '../CardComponent/CardComponent';
 
 interface IPostProps {
     id:number 
@@ -81,7 +81,7 @@ const Updates: React.FC = () => {
             <Wrapper>
                 {fetchedPosts?.data?.map(({ id, title, desc, img }: IPostProps) => (
                     <CardWrapper key={id} whileHover={{ scale: 1.1 }}>
-                        <CardComponent id={id} title={title} desc={desc} img={`http://localhost:3000/api/images/${img}`} />
+                        <CardComponent id={id} title={title} desc={desc} image={`http://localhost:3000/api/images/${img}`}  linkBasePath=""/>
                     </CardWrapper>
                 ))}
             </Wrapper>

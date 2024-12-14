@@ -11,10 +11,8 @@ export const formatDateTime = (dateTime: string) => {
         
         parsedDate.setHours(parsedDate.getHours() + 2);
         const formattedDate = format(parsedDate, 'dd-MM-yyyy HH:mm', { locale: pl });
-        console.log(formattedDate)
-        return formattedDate !== 'Invalid Date' ? formattedDate : 'Nieznana data';
+        return formattedDate !== 'Invalid Date' ? formattedDate : 'Invalid Date';
     } catch (error) {
-        console.error('Error parsing date:', error);
-        return 'Nieznana data';
+        return 'Invalid Date';
     }
 };

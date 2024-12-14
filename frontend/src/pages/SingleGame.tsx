@@ -102,8 +102,11 @@ const EditorContainer = styled.div`
         border: 2px solid #870252;
     }
 
-    .ql-formats span {
+    .ql-picker-label{
       color:white;
+    }
+    .ql-picker-item {
+        color: gray
     }
     .ql-stroke {
       stroke: white;
@@ -133,8 +136,6 @@ const SingleGame = () => {
 
     const {reviews, refetchReviews, deleteReviewMutation, editReviewMutation} = useReview(id)
 
-    console.log(reviews)
-
     useEffect(() => {
         const fetchData = async () => {
             await refetchSingleGame();
@@ -154,8 +155,7 @@ const SingleGame = () => {
         addReview.mutate(
             { userId: currentUser?.id, gameId: id, review: value, title: title },
             {
-                onSuccess: (data) => {
-                    console.log('Review submitted successfully:', data);
+                onSuccess: () => {
                     setValue('');
                     setTitle('');
                     refetchReviews();
@@ -168,7 +168,6 @@ const SingleGame = () => {
     };
 
     const handleEditReview = async (formData: any) => {
-        console.log(formData)
             editReviewMutation.mutate(formData, {onSuccess: () => {
                 setEditingReviewId(null);
                 setShowEditForm(false);
@@ -183,16 +182,13 @@ const SingleGame = () => {
     const handleDeleteReview = async (reviewId: number) => {
         deleteReviewMutation.mutate(reviewId, {
             onSuccess: () => {
-                console.log("Usunieto")
                     queryClient.invalidateQueries(
                         {
                           queryKey: ['reviews'],
                           exact: true 
                         }
                       )
-refetchReviews()
-    
-
+                refetchReviews()
             },
             onError: (error) => {
                 console.error('Edit review failed:', error);
@@ -210,7 +206,9 @@ refetchReviews()
         setShowEditForm(false);
     };
 
-    console.log(game?.rating);
+    console.log(reviews)
+    console.log(editingReviewId)
+
 
     return (
         <Container>
@@ -299,7 +297,7 @@ refetchReviews()
                         <EditorContainer>
                             <ReactQuill value={value} onChange={setValue} style={{ height: '100%', border: 'none' }} />
                         </EditorContainer>
-                        <StyledButton title={'Wyślij'} onClick={(e: any) => handleSubmit(e)} />
+                        <StyledButton title={'Send'} onClick={(e: any) => handleSubmit(e)} />
                     </Content>
                 ) : (
                     <Typography fontSize={20} fontWeight={'bold'} textAlign={'center'}>
@@ -319,23 +317,23 @@ refetchReviews()
             Reviews
         </Typography>
         {reviews?.map((r) =>
-            editingReviewId === r.id && showEditForm ? (
+            editingReviewId === r.reviewId && showEditForm ? (
                 <EditReviewForm
-                    key={r.id}
+                    key={r.reviewId}
                     reviewData={r}
                     onSave={handleEditReview}
                     onCancel={handleCancelEdit}
                 />
             ) : (
                 <motion.div
-                    key={r.id}
+                    key={r.reviewId}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.5 }}
                 >
                     <CommentCard
                         data={r}
-                        onEdit={() => handleEditButtonClick(r.id)}
+                        onEdit={() => handleEditButtonClick(r.reviewId)}
                         onDelete={handleDeleteReview}
                     />
                 </motion.div>

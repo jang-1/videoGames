@@ -12,7 +12,6 @@ export const useCreators = (id?: string, currentPage?:number, currentCreatorPage
         },
         enabled: !id
     });
-    console.log(gameDevsList)
     const gameDevs = gameDevsList?.data.results;
   
   

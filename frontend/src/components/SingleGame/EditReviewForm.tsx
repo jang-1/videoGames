@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Typography, Button, TextField } from '@mui/material';
+import { useState } from 'react';
+import { Typography} from '@mui/material';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styled from 'styled-components';
@@ -11,6 +11,22 @@ const EditorContainer = styled.div`
     .ql-container.ql-snow,
     .ql-toolbar.ql-snow {
         border: 2px solid #870252;
+    }
+
+    
+    .ql-container.ql-snow,
+    .ql-toolbar.ql-snow {
+        border: 2px solid #870252;
+    }
+
+    .ql-picker-label{
+      color:white;
+    }
+    .ql-picker-item {
+        color: gray
+    }
+    .ql-stroke {
+      stroke: white;
     }
 `;
 const StyledInput = styled.input`
@@ -36,17 +52,16 @@ const EditReviewForm = ({ reviewData, onSave, onCancel }:any) => {
                 Edit
             </Typography>
             <StyledInput
-                            type="text"
-                            placeholder="Title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
+                type="text"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+            />
             <EditorContainer>
-                            <ReactQuill value={content} onChange={setContent} style={{ height: '100%', border: 'none' }} />
+                <ReactQuill value={content} onChange={setContent} style={{ height: '100%', border: 'none' }} />
             </EditorContainer>
             <StyledButton  title='Save' onClick={handleSave} sx={{ margin: '0 1rem' }}/>
             <StyledButton  title='Cancel'  onClick={onCancel}/>
-
         </div>
     );
 };

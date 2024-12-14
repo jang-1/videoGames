@@ -11,7 +11,7 @@ type FormData = {
 type Review = {
   createdAt: string
   game_id: number
-  id: number
+  reviewId: number
   review_text: string
   title: string
   updatedAt: string | null

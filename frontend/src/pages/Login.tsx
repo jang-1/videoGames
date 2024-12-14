@@ -4,7 +4,7 @@ import Squid from "../assets/sq2.png"
 import Navbar from '../layout/Navbar'
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Sphere, MeshDistortMaterial } from "@react-three/drei";
-import { Suspense, useContext, useState } from 'react';
+import { Suspense, useContext } from 'react';
 
 import { useForm } from "react-hook-form"
 import StyledField from '../layout/StyledField';
@@ -131,16 +131,13 @@ const StyledLink = styled(Link)`
   const Login: React.FC = () => {
 
     const navigate = useNavigate()
-    const [error, setError] = useState<string | null>(null);
-    console.log(error)
-
     const {
         register,
-        handleSubmit,
+        handleSubmit
       } = useForm<FormData>()
 
 
-      const {handleLogin}= useContext(AuthContext)
+      const {handleLogin, error}= useContext(AuthContext)
 
   
       const onSubmit = handleSubmit((data) => {
@@ -148,9 +145,7 @@ const StyledLink = styled(Link)`
             name: data.login,
             email: data.email,
             password: data.password,
-        }, setError);
- 
-        {error == null || navigate("/")}
+        }, navigate);
       })
 
 
